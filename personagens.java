@@ -22,9 +22,7 @@ public abstract class personagens implements Runnable{
     public abstract void derrotado();
 
     public synchronized void atacarnormal(String tipoALvo, personagens alvo){
-        //ANIMAÇÃO DE ATAQUE//
         
-
         ImageIcon ataque = new ImageIcon("Sprints/" + nome + "ataque.png");
         JLabel labelAtaque = new JLabel(ataque);
 
@@ -68,8 +66,6 @@ public abstract class personagens implements Runnable{
             }
 
         }
-       
-
         if (alvo.vida <= 0) return;
         int dano = this.ataque;
         alvo.receberDano(dano, this);
