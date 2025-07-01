@@ -11,64 +11,17 @@ public abstract class personagens implements Runnable{
     public int vida;
     public int ataque;
     public int defesa;
-    public int posicaoX;
-    public int posicaoY;
+    public int [] velocidadedosataques = new int[4];
+
 
     ImageIcon imagem;
     JLabel label;
 
-    // Ações comuns a todos os personagens
-    public abstract void receberDano(int dano);
-    public abstract void derrotado();
-
-    public synchronized void atacarnormal(String tipoALvo, personagens alvo){
-        
-        ImageIcon ataque = new ImageIcon("Sprints/" + nome + "ataque.png");
-        JLabel labelAtaque = new JLabel(ataque);
-
-        setPositionxy(labelAtaque, this.label.getX(), this.label.getY());
-        while(labelAtaque.getX() != alvo.posicaoX || labelAtaque.getY() != alvo.posicaoY) {
-            if(labelAtaque.getX() < alvo.posicaoX){
-                labelAtaque.setLocation(labelAtaque.getX() - 1, labelAtaque.getY());
-                try {
-                    Thread.sleep(5);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    return;
-                }
-            }
-            else if(labelAtaque.getX() > alvo.posicaoX){
-                labelAtaque.setLocation(labelAtaque.getX() + 1, labelAtaque.getY());
-                try {
-                    Thread.sleep(5);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    return;
-                }
-            }
-            if(labelAtaque.getY() < alvo.posicaoY){
-                labelAtaque.setLocation(labelAtaque.getX(), labelAtaque.getY() + 1);
-                try {
-                    Thread.sleep(5);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    return;
-                }
-            }
-            else if(labelAtaque.getY() > alvo.posicaoY){
-                labelAtaque.setLocation(labelAtaque.getX(), labelAtaque.getY() - 1);
-                try {
-                    Thread.sleep(5);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    return;
-                }
-            }
-
+    public void receberDano(int dano, personagens autor) {
+        this.vida -= dano / this.defesa;
+        if (this.vida <= 0) {
+            this.derrotado();
         }
-        if (alvo.vida <= 0) return;
-        int dano = this.ataque;
-        alvo.receberDano(dano, this);
     }
 
 }
