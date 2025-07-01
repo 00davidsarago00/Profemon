@@ -46,7 +46,7 @@ public class jogo implements ActionListener {
         startButton.setPreferredSize(new Dimension(200, 50));
         startButton.setFont(new Font("Arial", Font.BOLD, 20));
         gamePanel.add(startButton, BorderLayout.CENTER);
-        gamePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 200));
+        gamePanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         
         startButton.addActionListener(this);
 
