@@ -14,33 +14,23 @@ public abstract class profemon extends personagens implements Runnable {
     int vidamaxima;
     
     //Ações específicas de Profemons
-    public void atacarhabilidade(String tipoALvo){
-
-    }
+    public abstract int ataque1();
+    public abstract int ataque2();
+    public abstract int ataque3();
+    public abstract int ataque4();
 
     public void mostrarCaracteristicas(){
         JLabel foto = new JLabel(this.imagem);
-        JFrame FCaracteristicas = new JFrame("Características do Profemon"); 
+        JFrame FCaracteristicas = new JFrame("Características do Profemon");
+        FCaracteristicas.setSize(1000,800); 
         FCaracteristicas.setLayout(new FlowLayout());
         FCaracteristicas.add(foto);
-        
-        //MUDAR//
-        JLabel nomeLabel = new JLabel("Nome: " + nome);
-        JLabel tipoLabel = new JLabel("Tipo: " + tipo);
-        JLabel nivelLabel = new JLabel("Nível: " + nivel);
-        JLabel vidaLabel = new JLabel("Vida: " + vida);
-        JLabel ataqueLabel = new JLabel("Ataque: " + ataque);
-        JLabel defesaLabel = new JLabel("Defesa: " + defesa);
 
+        JLabel caracteristicaslabel = new JLabel("Nome: " + nome + " | Tipo: " + tipo + " | Nível: " + nivel + " | Vida: " + vida + " | Ataque: " + ataque + " | Defesa: " + defesa);
+        caracteristicaslabel.setFont(new Font("Arial", Font.BOLD, 20));
 
-        FCaracteristicas.add(nomeLabel);
-        FCaracteristicas.add(tipoLabel);
-        FCaracteristicas.add(nivelLabel);
-        FCaracteristicas.add(vidaLabel);
-        FCaracteristicas.add(ataqueLabel);
-        FCaracteristicas.add(defesaLabel);
+        FCaracteristicas.add(caracteristicaslabel);
         FCaracteristicas.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        FCaracteristicas.setSize(400, 400);
         FCaracteristicas.setVisible(true);
     }
 
