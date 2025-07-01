@@ -91,7 +91,7 @@ public abstract class profemon extends personagens implements Runnable {
         this.experiencia += experienciaGanha;
         if (this.experiencia >= 88) {
             evoluirdenivel();
-            this.experiencia = 0;
+            this.experiencia = this.experiencia-88;
         }
     }
 
