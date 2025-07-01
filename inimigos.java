@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public abstract class inimigos extends personagens implements Runnable {
-    int velocidade;
 
     public synchronized void receberDano(int dano, profemon Autor) {
         this.vida -= dano/this.defesa;
@@ -17,7 +16,6 @@ public abstract class inimigos extends personagens implements Runnable {
     public void derrotado(){
 
         this.vida = 0;
-        velocidade = 0;
 
         this.label.setIcon(new ImageIcon("Sprints/" + nome + "derrotado.png"));
 
