@@ -3,7 +3,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public abstract class personagens implements Runnable{ 
+public abstract class personagens { 
     // Atributos comuns a todos os personagens
     public String nome;
     public String tipo;
@@ -12,10 +12,14 @@ public abstract class personagens implements Runnable{
     public int ataque;
     public int defesa;
     public int [] velocidadedosataques = new int[4];
+    public int [] poderdosataques = new int[4];
 
 
-    ImageIcon imagem;
+    ImageIcon imagemFrente;
+    ImageIcon imagemderrotado;
     JLabel label;
+    
+    public abstract void derrotado();
 
     public void receberDano(int dano, personagens autor) {
         this.vida -= dano / this.defesa;
@@ -23,5 +27,4 @@ public abstract class personagens implements Runnable{
             this.derrotado();
         }
     }
-
 }
