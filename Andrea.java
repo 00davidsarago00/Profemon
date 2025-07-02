@@ -6,23 +6,33 @@ public class Andrea extends profemon {
     public Andrea() {
         this.nome = "Andrea";
         this.tipo = "Programador";
-        this.ataque = 20;
-        this.vida = 100;
+        this.ataque = 65;
+        this.vida = 95;
         this.nivel = 1;
-        imagem = new ImageIcon("Sprints/" + nome + nivel + ".png");
-        this.vidamaxima = 100;
-        imagem = new ImageIcon(imagem.getImage().getScaledInstance(550, 550, Image.SCALE_SMOOTH));
-        this.label = new JLabel(imagem); 
-        this.evolucao = 1;   
-        this.velocidadedosataques[0] = 10; 
-        this.velocidadedosataques[1] = 15; 
-        this.velocidadedosataques[2] = 20;
-        this.velocidadedosataques[3] = 25;
-    }
-    @Override
-    public void run() {
+        this.defesa = 105;
+        this.evolucao = 1;
+        this.vidamaxima = 95;
+        
+        imagemfrente = new ImageIcon("Sprints/" + nome + nivel + "Front" + ".png");
+        imagemcostas = new ImageIcon("Sprints/" + nome + nivel + "Back" + ".png");
+        imagemfrente = new ImageIcon(imagemfrente.getImage().getScaledInstance(550, 550, Image.SCALE_SMOOTH));
+        imagemcostas = new ImageIcon(imagemcostas.getImage().getScaledInstance(550, 550, Image.SCALE_SMOOTH));
+        
+        this.label = new JLabel(imagemfrente); 
+        
+           
+        this.velocidadedosataques[0] = 80; 
+        this.velocidadedosataques[1] = 50; 
+        this.velocidadedosataques[2] = 70;
+        this.velocidadedosataques[3] = 95;
+
+        this.poderdosataques[0] = 45;
+        this.poderdosataques[1] = 0;
+        this.poderdosataques[2] = 20;
+        this.poderdosataques[3] = 40;
 
     }
+    
 }
 
     
