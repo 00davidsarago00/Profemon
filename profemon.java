@@ -6,18 +6,16 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public abstract class profemon extends personagens implements Runnable {
+public abstract class profemon extends personagens {
     // Atributos específicos de Profemons
     public int nivel=1;
     int experiencia=0;
     int evolucao=1;
     int vidamaxima;
-    
+    ImageIcon imagemcostas;
+
     //Ações específicas de Profemons
-    public abstract int ataque1();
-    public abstract int ataque2();
-    public abstract int ataque3();
-    public abstract int ataque4();
+    
 
     public void mostrarCaracteristicas(){
         JLabel foto = new JLabel(this.imagem);
