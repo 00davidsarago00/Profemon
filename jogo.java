@@ -22,12 +22,12 @@ public class jogo implements ActionListener{
     profemon []rejeitados = new profemon[6];
     inimigos []equipeinimigos = new inimigos[6];
 
-    public int indice = 0;
+    volatile int indice = -1;
     public int quantiadedeprofemons = 0;
     public int quantiadedeinimigos = 0;
 
     //inimigos
-    InimigoPetista inimigopetista = new InimigoPetista();
+    Fluflu fluflu = new Fluflu();
 
     //Botões
     JButton paiolaButton = new JButton("Ver as caracteristicas de Paiola");
@@ -42,24 +42,38 @@ public class jogo implements ActionListener{
     JPanel gamePanel = new JPanel();
     JPanel profemonsPanel = new JPanel();
 
+    //backgorunds
+
+    ImageIcon Biblioteca = new ImageIcon("Backgrounds/Bibilioteca_BG.png");
+    ImageIcon LEPEC = new ImageIcon("Backgrounds/LEPEC_BG.png");
+    ImageIcon Portaria = new ImageIcon("Backgrounds/Portaria_BG.png");
+    ImageIcon PrimeiroDeMaio = new ImageIcon("Backgrounds/PrimeiroDeMaio_BG.png");
+    ImageIcon RU = new ImageIcon("Backgrounds/RU_BG.png");
+
+
     //Batalha
     profemon prof;
 
     public jogo(){
-        
+        Portaria = new ImageIcon(Portaria.getImage().getScaledInstance(1200, 720, Image.SCALE_SMOOTH));
         Principal.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Principal.setSize(1200, 720);
         Principal.setLayout(new BorderLayout());
 
+        JLabel fundoLabel = new JLabel(Portaria);
+        fundoLabel.setBounds(0, 0, 1200, 720);
+
         startButton.setPreferredSize(new Dimension(200, 50));
         startButton.setFont(new Font("Arial", Font.BOLD, 20));
-        gamePanel.add(startButton, BorderLayout.CENTER);
-        gamePanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-        
         startButton.addActionListener(this);
+        startButton.setBounds(500, 500, 200, 50); // x, y, largura, altura
 
+        fundoLabel.add(startButton);
+
+        gamePanel.setLayout(new BorderLayout());
+        gamePanel.add(fundoLabel, BorderLayout.CENTER);
+        
         Principal.add(gamePanel, BorderLayout.CENTER);
-       
         Principal.setVisible(true);
 
         while (!comecou) {
@@ -68,14 +82,15 @@ public class jogo implements ActionListener{
         }
 
         startButton.setVisible(false);
-        gamePanel.remove(startButton);
-        gamePanel.setLayout(new GridLayout(1, 1)); 
+        fundoLabel.remove(startButton);
         JLabel gameLabel = new JLabel("Jogo Iniciado!", SwingConstants.CENTER);
-
-        Principal.add(gamePanel, BorderLayout.CENTER);
         gameLabel.setFont(new Font("Arial", Font.BOLD, 30));
-        gamePanel.add(gameLabel);
+        gameLabel.setOpaque(true);
+        gameLabel.setBackground(Color.WHITE);
         
+        gameLabel.setBounds(40, 335, 1000, 50);
+        fundoLabel.add(gameLabel);
+
         gameLabel.setText("Seja bem vindo, jovem universitario! Ao mundo dos Profemons.");
         esperar(5000);
         gameLabel.setText("Aqui, esteja preparado para enfrentar os inimigos do conhecimento!");
@@ -99,24 +114,23 @@ public class jogo implements ActionListener{
         paiolaButton.setFont(new Font("Arial", Font.BOLD, 20));
         andreaButton.setFont(new Font("Arial", Font.BOLD, 20));
         lhButton.setFont(new Font("Arial", Font.BOLD, 20));
+        
+        paiolaButton.setIcon(paiola.imagemfrente);
+        andreaButton.setIcon(andrea.imagemfrente);
+        lhButton.setIcon(lh.imagemfrente);
 
-        profemonsPanel.setLayout(new GridLayout(2,3));
 
-        profemonsPanel.add(paiola.label);
-        profemonsPanel.add(andrea.label);
-        profemonsPanel.add(lh.label);
+        profemonsPanel.setLayout(new GridLayout(1,3));
 
         profemonsPanel.add(paiolaButton);
         profemonsPanel.add(andreaButton);
         profemonsPanel.add(lhButton);
 
-        paiola.label.setVisible(true);
-        andrea.label.setVisible(true);
-        lh.label.setVisible(true);
+        gamePanel.add(profemonsPanel, BorderLayout.CENTER);
 
         escolhaButton.setFont(new Font("Arial", Font.BOLD, 20));
 
-        gamePanel.add(profemonsPanel, BorderLayout.CENTER);
+        
         gamePanel.add(escolhaButton, BorderLayout.SOUTH);
         escolhaButton.addActionListener(this);
         
@@ -134,7 +148,7 @@ public class jogo implements ActionListener{
         gamePanel.remove(escolhaButton);
 
         while(equipe[0] == null) {
-            esperar(5000);
+            esperar(100);
             Principal.setTitle("Jogo de Profemons - Aguardando Escolha do Profemon");
         }
         escolha = false;
@@ -159,7 +173,7 @@ public class jogo implements ActionListener{
         gameLabel.setText("Espera, o que é isso? Um inimigo esta se aproximando!");
         esperar(5000);
         
-        equipeinimigos[0] = inimigopetista;
+        equipeinimigos[0] = fluflu;
         quantiadedeinimigos = 1;
         gameLabel.setText("Prepare-se para a batalha! Use seu Profemon para enfrentar o inimigo!");
         esperar(5000);
@@ -171,12 +185,12 @@ public class jogo implements ActionListener{
 
         do{
             confronto = batalha(equipe,equipeinimigos);
-            while(!acabou) {};
+            //while(!acabou) {};
             gamePanel.removeAll();
             gamePanel.add(gameLabel, BorderLayout.CENTER);
-            if(!confronto){
-                equipe[0].reviveu(equipe[0].vidamaxima);   
+            if(!confronto){   
                 gameLabel.setText("Espera ai, ainda nao acabou, irei curar " + equipe[0].nome +"! Tente novamente");
+                equipe[0].reviveu(equipe[0].vidamaxima);
                 esperar(5000);
                 //Quando tiver as imagens, ve se nao vale a pena colocar ele derrotado depois vivo
             }
@@ -197,6 +211,7 @@ public class jogo implements ActionListener{
 
 
         //continuar aqui
+        acabou = false;
 
 
 
@@ -225,7 +240,7 @@ public class jogo implements ActionListener{
                     profButton.setIcon(profImagederrotado);
                 }
                 else{
-                    profButton.setIcon(profe.imagem);
+                    profButton.setIcon(profe.imagemfrente);
                     equipePanel.add(profButton);
                     profButton.addActionListener(new ActionListener() {
                         @Override
@@ -276,11 +291,15 @@ public class jogo implements ActionListener{
         else if(e.getSource() == paiolaButton && escolha) {
             gamePanel.removeAll();
             gamePanel.setLayout(new BorderLayout());
-            JLabel escolhaLabel = new JLabel("Você escolheu Paiola!", SwingConstants.CENTER);
+            JLabel escolhaLabel = new JLabel("Ótimo, você escolheu o Paiola! Tenho certeza que terão uma gloriosa jornada", SwingConstants.CENTER);
             escolhaLabel.setFont(new Font("Arial", Font.BOLD, 30));
             gamePanel.add(escolhaLabel, BorderLayout.CENTER);
             paiola.label.setVisible(true);
-            Principal.setTitle("Jogo de Profemons - Paiola Escolhido");
+            Principal.setTitle("Jogo de Profemons - Paiola Escolhido"); 
+            gamePanel.revalidate();
+            gamePanel.repaint();
+            esperar(5000);
+
             equipe[0] = paiola;
             rejeitados[0] = andrea;
             rejeitados[1] = lh;
@@ -289,11 +308,14 @@ public class jogo implements ActionListener{
         } else if(e.getSource() == andreaButton && escolha) {
             gamePanel.removeAll();
             gamePanel.setLayout(new BorderLayout());
-            JLabel escolhaLabel = new JLabel("Você escolheu Andrea!", SwingConstants.CENTER);
+            JLabel escolhaLabel = new JLabel("Então, você escolheu a Andrea! Ótima escolha.", SwingConstants.CENTER);
             escolhaLabel.setFont(new Font("Arial", Font.BOLD, 30));
             gamePanel.add(escolhaLabel, BorderLayout.CENTER);
             andrea.label.setVisible(true);
             Principal.setTitle("Jogo de Profemons - Andrea Escolhida");
+            gamePanel.revalidate();
+            gamePanel.repaint();
+            esperar(5000);
             equipe[0] = andrea;
             rejeitados[0] = paiola;
             rejeitados[1] = lh;
@@ -302,11 +324,14 @@ public class jogo implements ActionListener{
         } else if(e.getSource() == lhButton && escolha) {
             gamePanel.removeAll();
             gamePanel.setLayout(new BorderLayout());
-            JLabel escolhaLabel = new JLabel("Você escolheu LH!", SwingConstants.CENTER);
+            JLabel escolhaLabel = new JLabel("Maravilha você escolheu o Lh! Muito bem.", SwingConstants.CENTER);
             escolhaLabel.setFont(new Font("Arial", Font.BOLD, 30));
             gamePanel.add(escolhaLabel, BorderLayout.CENTER);
             lh.label.setVisible(true);
-            Principal.setTitle("Jogo de Profemons - LH Escolhido");
+            Principal.setTitle("Jogo de Profemons - Lh Escolhido");
+            gamePanel.revalidate();
+            gamePanel.repaint();
+            esperar(5000);
             equipe[0] = lh;
             rejeitados[0] = paiola;
             rejeitados[1] = andrea;
@@ -342,8 +367,9 @@ public class jogo implements ActionListener{
         Principal.add(gamePanel);
 
         while(aux > 0 && aux2 > 0){
+            prof.imagemcostas = new ImageIcon(prof.imagemcostas.getImage().getScaledInstance(200, 300, Image.SCALE_SMOOTH));
+            prof.label = new JLabel(prof.imagemcostas);  
             while(prof.vida > 0 && inimigo.vida > 0) {
-                indice = -1;
                 gamePanel.removeAll();
                 gamePanel.setLayout(new GridLayout(2,1));
 
@@ -352,7 +378,6 @@ public class jogo implements ActionListener{
                 imagens.add(inimigo.label);
 
                 JPanel infos = new JPanel(new GridLayout(1, 2));
-                
 
                 profLabel.setFont(new Font("Arial", Font.BOLD, 20));
                 inimigoLabel.setFont(new Font("Arial", Font.BOLD, 20)); 
@@ -361,10 +386,12 @@ public class jogo implements ActionListener{
                 infos.add(inimigoLabel);
 
                 JPanel acoesPanel = new JPanel(new GridLayout(2, 2));
-                JButton ataque1Button = new JButton("Ataque 1");
-                JButton ataque2Button = new JButton("Ataque 2");
-                JButton ataque3Button = new JButton("Ataque 3");
-                JButton ataque4Button = new JButton("Ataque 4");
+                JButton ataque1Button = new JButton(prof.nomedosataques[0]);
+                JButton ataque2Button = new JButton(prof.nomedosataques[1]);
+                JButton ataque3Button = new JButton(prof.nomedosataques[2]);
+                JButton ataque4Button = new JButton(prof.nomedosataques[3]);
+
+                
 
                 ataque1Button.setFont(new Font("Arial", Font.BOLD, 20));
                 ataque2Button.setFont(new Font("Arial", Font.BOLD, 20));
@@ -421,8 +448,10 @@ public class jogo implements ActionListener{
 
                 while(indice < 0 || indice > 3) {
                     Principal.setTitle("Jogo de Profemons - Aguardando Escolha do Ataque");
-                }
 
+                }
+                Principal.setTitle("Atacando");
+                esperar(2000);
                 modificardordetipoprof = 1;
                 modificadordetipoinimigo = 1;
 
@@ -438,7 +467,7 @@ public class jogo implements ActionListener{
                     modificardordetipoprof = 0.75;
                     modificadordetipoinimigo = 1.5;
                 }
-                else if(inimigo.tipo.equals("Matematica") && prof.tipo.equals("Engenheiro")){
+                else if(inimigo.tipo.equals("Matematico") && prof.tipo.equals("Engenheiro")){
                     modificardordetipoprof = 1.5;
                     modificadordetipoinimigo = 0.75;
                 }
@@ -455,25 +484,31 @@ public class jogo implements ActionListener{
                 
                 int indiceinimigo = (int) (Math.random() * 4);
 
-                double danoprof = (double)(prof.ataque*prof.poderdosataques[indice] / inimigo.defesa)*modificardordetipoprof;
-                double danoini =  (double)(inimigo.ataque*inimigo.poderdosataques[indiceinimigo] / prof.defesa)*modificadordetipoinimigo;
+                double danoprof = (double)(prof.ataque*prof.poderdosataques[indice] / (inimigo.defesa))*modificardordetipoprof;
+                double danoini =  (double)(inimigo.ataque*inimigo.poderdosataques[indiceinimigo] / (prof.defesa))*modificadordetipoinimigo;
 
                 if(prof.velocidadedosataques[indice] > inimigo.velocidadedosataques[indiceinimigo]) {
                     inimigo.receberDano((int)Math.floor(danoprof), prof);
                     if(inimigo.vida > 0) {
                         prof.receberDano((int)Math.ceil(danoini), inimigo);
                     }
-                } else {
+                } 
+                else {
                     prof.receberDano((int)Math.ceil(danoini), inimigo);
                     if(prof.vida > 0) {
                         inimigo.receberDano((int)Math.floor(danoprof), prof);
                     }
+                    
                 }
-                
+                indice = -1;
+                profLabel.setText(prof.nome + " (Vida: " + prof.vida + ")");
+                inimigoLabel.setText(inimigo.nome + " (Vida: " + inimigo.vida + ")");
             }
-            profLabel.setText(prof.nome + " (Vida: " + prof.vida + ")");
-            inimigoLabel.setText(inimigo.nome + " (Vida: " + inimigo.vida + ")");
-
+            
+           
+            gamePanel.revalidate();
+            gamePanel.repaint();
+            
             if(prof.vida <= 0) {
                 Principal.revalidate();
                 prof.label.setVisible(false);
@@ -491,7 +526,8 @@ public class jogo implements ActionListener{
                 inimigo.label.setVisible(false);
                 aux2--;
                 if(aux2 > 0) {
-                    inimigo = inimigue[contador++];
+                    contador++;
+                    inimigo = inimigue[contador];
                 } else {
                     vitoria = true;
                     break;
