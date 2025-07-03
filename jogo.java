@@ -6,9 +6,17 @@ import java.awt.event.ActionListener;
 public class jogo implements ActionListener{
     boolean comecou = false;
     boolean escolha = false;
+    boolean escolhafinal = false;
     boolean confronto = false;
     boolean acabou = false;
     boolean sair = false;
+    boolean escolheuprof = false;
+    boolean venceuafase1 = false;
+    boolean venceuafase2 = false;
+    boolean venceuafase3 = false;
+    boolean venceuafase4 = false;
+   
+
     
     
     //Profemons
@@ -20,22 +28,20 @@ public class jogo implements ActionListener{
     Douglas douglas = new Douglas();
 
     profemon []equipe = new profemon[6];
-    profemon []rejeitados = new profemon[6];
+    profemon []rejeitados = new profemon[12];
     inimigos []equipeinimigos = new inimigos[6];
 
     volatile int indice = -1;
     public int quantiadedeprofemons = 0;
+    public int quantidaderejeitados = 0;
     public int quantiadedeinimigos = 0;
 
     //inimigos
     Fluflu fluflu = new Fluflu();
 
     //Botões
-    JButton paiolaButton = new JButton("Ver as caracteristicas de Paiola");
-    JButton andreaButton = new JButton("Ver as caracteristicas de Andrea");
-    JButton lhButton = new JButton("Ver as caracteristicas de LH");
+    
     JButton startButton = new JButton("Iniciar Jogo");
-
     JButton escolhaButton = new JButton("Aperte aqui quando tomar sua decisão!");
     
     //Paineis
@@ -45,7 +51,7 @@ public class jogo implements ActionListener{
 
     //backgorunds
 
-    ImageIcon Biblioteca = new ImageIcon("Backgrounds/Bibilioteca_BG.png");
+    ImageIcon Biblioteca = new ImageIcon("Backgrounds/Biblioteca_BG.png");
     ImageIcon LEPEC = new ImageIcon("Backgrounds/LEPEC_BG.png");
     ImageIcon Portaria = new ImageIcon("Backgrounds/Portaria_BG.png");
     ImageIcon PrimeiroDeMaio = new ImageIcon("Backgrounds/PrimeiroDeMaio_BG.png");
@@ -55,6 +61,9 @@ public class jogo implements ActionListener{
 
     //Batalha
     profemon prof;
+
+    //Labels
+    JLabel gameLabel;
 
     public jogo(){
         Portaria = new ImageIcon(Portaria.getImage().getScaledInstance(1200, 720, Image.SCALE_SMOOTH));
@@ -85,7 +94,7 @@ public class jogo implements ActionListener{
 
         startButton.setVisible(false);
         fundoLabel.remove(startButton);
-        JLabel gameLabel = new JLabel("Jogo Iniciado!", SwingConstants.CENTER);
+        gameLabel = new JLabel("Jogo Iniciado!", SwingConstants.CENTER);
         gameLabel.setFont(new Font("Arial", Font.BOLD, 30));
         gameLabel.setOpaque(true);
         gameLabel.setBackground(Color.WHITE);
@@ -101,78 +110,8 @@ public class jogo implements ActionListener{
         esperar(5000);
         gameLabel.setText("Para iniciarmos, escolha seu Profemon inicial!");
         esperar(5000);
-        gamePanel.removeAll();
-        gamePanel.setLayout(new BorderLayout());
-
         
-        gameLabel.setText("Escolha seu Profemon inicial:\n\n");
-        gamePanel.add(gameLabel, BorderLayout.NORTH);
-
-
-        paiolaButton.addActionListener(this);
-        andreaButton.addActionListener(this);
-        lhButton.addActionListener(this);
-
-        paiolaButton.setFont(new Font("Arial", Font.BOLD, 20));
-        andreaButton.setFont(new Font("Arial", Font.BOLD, 20));
-        lhButton.setFont(new Font("Arial", Font.BOLD, 20));
-        
-        paiolaButton.setIcon(paiola.imagemfrente);
-        andreaButton.setIcon(andrea.imagemfrente);
-        lhButton.setIcon(lh.imagemfrente);
-
-
-        profemonsPanel.setLayout(new GridLayout(1,3));
-
-        profemonsPanel.add(paiolaButton);
-        profemonsPanel.add(andreaButton);
-        profemonsPanel.add(lhButton);
-
-        gamePanel.add(profemonsPanel, BorderLayout.CENTER);
-
-        escolhaButton.setFont(new Font("Arial", Font.BOLD, 20));
-
-        
-        gamePanel.add(escolhaButton, BorderLayout.SOUTH);
-        escolhaButton.addActionListener(this);
-        
-        gamePanel.revalidate();
-
-        while (!escolha) {
-            esperar(100);
-            Principal.setTitle("Jogo de Profemons - Aguardando Escolha do Profemon");
-        }
-        
-        paiolaButton.setText("Escolher Paiola!");
-        andreaButton.setText("Escolher Andrea!");
-        lhButton.setText("Escolher LH!");
-
-        gamePanel.remove(escolhaButton);
-
-        while(equipe[0] == null) {
-            esperar(100);
-            Principal.setTitle("Jogo de Profemons - Aguardando Escolha do Profemon");
-        }
-        escolha = false;
-
-        
-
-        gamePanel.removeAll();
-        Principal.revalidate();
-
-        Principal.setTitle("Jogo de Profemons - " + equipe[0].nome + " Escolhido");
-        gameLabel.setText("Você escolheu " + equipe[0].nome + "! Preparem-se para a aventura!");
-        gameLabel.setBounds(50, 335, 1000, 50); // mantém a posição centralizada
-
-        fundoLabel.setIcon(PrimeiroDeMaio);
-        fundoLabel.setBounds(0, 0, 1200, 720);
-        fundoLabel.add(gameLabel);
-
-        gamePanel.setLayout(null);
-        gamePanel.add(fundoLabel);
-        gamePanel.repaint();
-        gamePanel.revalidate();
-        esperar(5000);
+        telaescolherprofemon(matheus, lh, andrea);
         
         gameLabel.setText("Espera, o que é isso? Um inimigo esta se aproximando!");
         esperar(5000);
@@ -193,13 +132,14 @@ public class jogo implements ActionListener{
             }
             gamePanel.revalidate();
         }while(!confronto);
-
+        confronto = false;
         fundoLabel.removeAll();
         fundoLabel.setIcon(PrimeiroDeMaio);
 
         gameLabel.setBounds(50, 335, 1000, 50);
         fundoLabel.add(gameLabel);
         fundoLabel.revalidate();
+        fundoLabel.repaint();
         gameLabel.setText("Parabens, voce venceu seu primeiro inimigo!");
         esperar(5000);
         gameLabel.setText("Agora, sua jornada se inicia de verdade.");
@@ -208,44 +148,275 @@ public class jogo implements ActionListener{
         esperar(5000);
         gameLabel.setText("Te desejo sorte e cuidado! Os inimigos são o pior da humanidade");
         esperar(5000);
+    
 
+        gameLabel.setBounds(50, 15, 1000, 50);
+        gameLabel.setText("Qual confronto voce irá primeiro?");
+            
+        JPanel paineldefases = new JPanel(new GridLayout(5,3));
+        paineldefases.setBounds(400, 100, 400, 500);
 
+        JButton fase1 = new JButton("Fase 1 - Biblioteca");
+        JButton fase2 = new JButton("Fase 2 - LABSIC");
+        JButton fase3 = new JButton("Fase 3 - RU");
+        JButton fase4 = new JButton("Fase 4 - Boss 1");
+        JButton fase5 = new JButton("Fase 5 - Boss 2");
+
+        fase1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new Thread(() -> {
+                do{
+                    limpaequipe(equipeinimigos);       
+                    equipeinimigos[0] = new Fluflu();
+                    equipeinimigos[1] = new Cherries();
+                    confronto = batalha(equipe,equipeinimigos,Biblioteca);
+                    
+                    if(!confronto){  
+                        fundoLabel.removeAll();
+                        fundoLabel.add(gameLabel, BorderLayout.CENTER); 
+                        gameLabel.setText("Espera ai, ainda nao acabou, irei curar sua equipe! Tente novamente");
+                        fundoLabel.revalidate();
+                        gamePanel.revalidate();
+                        esperar(5000);
+                        reviveEquipe(equipe);
+                        }   
+                    gamePanel.revalidate();
+                }while(!confronto);
+                confronto = false;
+                fundoLabel.revalidate();
+                gamePanel.revalidate();
+                gameLabel.setText("Muito bem, você passou pela fase 1!");
+                fundoLabel.revalidate();
+                gamePanel.revalidate();
+                esperar(5000);
+                if(quantiadedeprofemons < 6){
+                gameLabel.setText("Como recompensa, escolha um novo profemon");
+                fundoLabel.revalidate();
+                gamePanel.revalidate();
+                esperar(5000);
+                telaescolherprofemon(emilia,rejeitados[quantidaderejeitados-1],rejeitados[quantidaderejeitados-2]);
+                }
+                gameLabel.setText("Escolha seu proximo desafio");
+                fundoLabel.revalidate();
+                gamePanel.revalidate();
+                esperar(5000);
+                venceuafase1 = true;
+                }).start();
+            }
+        });
+        fase2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new Thread(() -> {
+                do{
+                    limpaequipe(equipeinimigos);
+                    equipeinimigos[0] = new Cherries();
+                    equipeinimigos[1] = new Fluflu();
+                    equipeinimigos[2] = new Cherries();
+
+                    confronto = batalha(equipe,equipeinimigos,LEPEC);
+                    if(!confronto){  
+                        fundoLabel.removeAll();
+                        fundoLabel.add(gameLabel, BorderLayout.CENTER); 
+                        gameLabel.setText("Espera ai, ainda nao acabou, irei curar sua equipe! Tente novamente");
+                        fundoLabel.revalidate();
+                        gamePanel.revalidate();
+                        esperar(5000);
+                        reviveEquipe(equipe);
+                        }
+                    gamePanel.revalidate();
+                }while(!confronto);
+                confronto = false;
+                gameLabel.setText("Muito bem, você passou pela fase 2!");
+                fundoLabel.revalidate();
+                gamePanel.revalidate();
+                esperar(5000);
+                if(quantiadedeprofemons < 6){
+                gameLabel.setText("Como recompensa, escolha um novo profemon");
+                fundoLabel.revalidate();
+                gamePanel.revalidate();
+                esperar(5000);
+                telaescolherprofemon(paiola,rejeitados[quantidaderejeitados-1],rejeitados[quantidaderejeitados-2]);
+                }
+                gameLabel.setText("Escolha seu proximo desafio");
+                fundoLabel.revalidate();
+                gamePanel.revalidate();
+                esperar(5000);
+                venceuafase2 = true;
+                }).start();
+            }
+        });
+        fase3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new Thread(() -> {
+                do{
+                    limpaequipe(equipeinimigos);
+                    equipeinimigos[0] = new Fluflu();
+                    equipeinimigos[1] = new CaisTharla();
+                    equipeinimigos[2] = new Cherries();
+                    equipeinimigos[2] = new CaisTharla();
+
+                    confronto = batalha(equipe,equipeinimigos,RU);
+                    if(!confronto){  
+                        fundoLabel.removeAll();
+                        fundoLabel.add(gameLabel, BorderLayout.CENTER); 
+                        gameLabel.setText("Espera ai, ainda nao acabou, irei curar sua equipe! Tente novamente");
+                        fundoLabel.revalidate();
+                        gamePanel.revalidate();
+                        esperar(5000);
+                        reviveEquipe(equipe);
+                        }
+                    gamePanel.revalidate();
+                }while(!confronto);
+                confronto = false;
+                gameLabel.setText("Muito bem, você passou pela fase 3!");
+                fundoLabel.revalidate();
+                gamePanel.revalidate();
+                esperar(5000);
+                if(quantiadedeprofemons < 6){
+                gameLabel.setText("Como recompensa, escolha um novo profemon");
+                fundoLabel.revalidate();
+                gamePanel.revalidate();
+                esperar(5000);
+                telaescolherprofemon(douglas,rejeitados[quantidaderejeitados-1],rejeitados[quantidaderejeitados-2]);
+                }
+                gameLabel.setText("Escolha seu proximo desafio");
+                fundoLabel.revalidate();
+                gamePanel.revalidate();
+                esperar(5000);
+                venceuafase3 = true;
+                }).start();
+            }
+            
+        });
         
+        fase4.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new Thread(() -> {
+                do{
+                    limpaequipe(equipeinimigos);
+                    equipeinimigos[0] = new Boss1();
+
+                    confronto = batalha(equipe,equipeinimigos,PrimeiroDeMaio);
+                    if(!confronto){  
+                        fundoLabel.removeAll();
+                        fundoLabel.add(gameLabel, BorderLayout.CENTER); 
+                        gameLabel.setText("Espera ai, ainda nao acabou, irei curar sua equipe! Tente novamente");
+                        fundoLabel.revalidate();
+                        gamePanel.revalidate();
+                        esperar(5000);
+                        reviveEquipe(equipe);
+                        }
+                    gamePanel.revalidate();
+                }while(!confronto);
+                confronto = false;
+                gameLabel.setText("Muito bem, você passou pela fase 4!");
+                fundoLabel.revalidate();
+                gamePanel.revalidate();
+                esperar(5000);
+                if(quantiadedeprofemons < 6){
+                gameLabel.setText("Como recompensa, escolha um novo profemon");
+                fundoLabel.revalidate();
+                gamePanel.revalidate();
+                esperar(5000);
+                telaescolherprofemon(paiola,rejeitados[quantidaderejeitados-1],rejeitados[quantidaderejeitados-2]);
+                }
+                gameLabel.setText("Escolha seu proximo desafio");
+                fundoLabel.revalidate();
+                gamePanel.revalidate();
+                esperar(5000);
+                venceuafase4 = true;
+                }).start();
+            }
+        });
+        fase5.addActionListener(new ActionListener() {
+            
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new Thread(() -> {
+                do{
+                    limpaequipe(equipeinimigos);
+                    equipeinimigos[0] = new Boss1();
+                    equipeinimigos[1] = new Boss2();
+
+                    confronto = batalha(equipe,equipeinimigos,Portaria);
+                    if(!confronto){  
+                        fundoLabel.removeAll();
+                        fundoLabel.add(gameLabel, BorderLayout.CENTER); 
+                        gameLabel.setText("Espera ai, ainda nao acabou, irei curar sua equipe! Tente novamente");
+                        fundoLabel.revalidate();
+                        gamePanel.revalidate();
+                        esperar(5000);
+                        reviveEquipe(equipe);
+                        }
+                    gamePanel.revalidate();
+                }while(!confronto);
+                confronto = false;
+                gameLabel.setText("Muito bem, você passou pela fase 5!");
+                fundoLabel.revalidate();
+                gamePanel.revalidate();
+                esperar(5000);
+                if(quantiadedeprofemons < 6){
+                gameLabel.setText("Como recompensa, escolha um novo profemon");
+                fundoLabel.revalidate();
+                gamePanel.revalidate();
+                esperar(5000);
+                telaescolherprofemon(paiola,rejeitados[quantidaderejeitados-1],rejeitados[quantidaderejeitados-2]);
+                }
+                gameLabel.setText("Escolha seu proximo desafio");
+                fundoLabel.revalidate();
+                gamePanel.revalidate();
+                esperar(5000);
+                }).start();
+            }
+        });
+
+        paineldefases.add(fase1);
+        paineldefases.add(fase2);
+        paineldefases.add(fase3);
+        paineldefases.add(fase4);
+        paineldefases.add(fase5);
+        
+        fundoLabel.add(paineldefases);
+        
+        fundoLabel.revalidate();
+        gamePanel.revalidate();
+
+        JButton fecharjogo = new JButton("Fechar jogo!");
+        fecharjogo.setFont(new Font("Arial", Font.BOLD, 20));
+        fecharjogo.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                sair = true;
+            }
+                
+        });
+
+        fecharjogo.setBounds(500, 500, 200, 50);
 
         while(!sair){
-            fundoLabel.setBounds(new GridLayout(1,3));
-
-            gameLabel.setBounds(50, 15, 1000, 50);
-            gameLabel.setText("Qual confronto voce irá primeiro?");
+            esperar(100);
+            Principal.setTitle("Jogo de Profemons - Aguardando Selecionar a fase");
+            if(!venceuafase1) fase2.setEnabled(false);
+            else fase2.setEnabled(true);
             
-            JButton fase1 = new JButton("Fase 1 - Biblioteca");
+            if(!venceuafase2) fase3.setEnabled(false);
+            else fase3.setEnabled(true);
+            
+            if(!venceuafase3) fase4.setEnabled(false);
+            else fase4.setEnabled(true);
 
-                fase1.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        do{
-                            confronto = batalha(equipe,equipeinimigos,Biblioteca);
-                            if(!confronto){  
-                                fundoLabel.removeAll();
-                                fundoLabel.add(gameLabel, BorderLayout.CENTER); 
-                                gameLabel.setText("Espera ai, ainda nao acabou, irei curar sua equipe! Tente novamente");
-                                for(profemon profem : equipe){
-                                    profem.reviveu(equipe[0].vidamaxima);
-                                    JOptionPane.showMessageDialog(Principal,  profem.nome + " reviveu");
-                                    esperar(1000);
-                                }
-                            }
-                            gamePanel.revalidate();
-                        }while(!confronto);
-                        
-                        
+            if(!venceuafase4) fase5.setEnabled(false);
+            else fase5.setEnabled(true);
+            fundoLabel.revalidate();
+            gamePanel.revalidate();
+            fundoLabel.repaint();
+            gamePanel.repaint();
 
-                    }
-                });
-
-        }
-
-
+            }
+        System.exit(0);
     }
     
     public static void main(String[] args) {
@@ -306,68 +477,6 @@ public class jogo implements ActionListener{
         if (e.getSource() == startButton) {
             comecou = true;
         }
-        else if(e.getSource() == paiolaButton && !escolha) {
-            paiola.mostrarCaracteristicas();
-        }  
-        else if(e.getSource() == andreaButton && !escolha) {
-            andrea.mostrarCaracteristicas();
-        }  
-        else if(e.getSource() == lhButton && !escolha) {
-            lh.mostrarCaracteristicas();
-        } 
-        else if(e.getSource() == escolhaButton) {
-            escolha = true;
-        }
-        else if(e.getSource() == paiolaButton && escolha) {
-            gamePanel.removeAll();
-            gamePanel.setLayout(new BorderLayout());
-            JLabel escolhaLabel = new JLabel("Ótimo, você escolheu o Paiola! Tenho certeza que terão uma gloriosa jornada", SwingConstants.CENTER);
-            escolhaLabel.setFont(new Font("Arial", Font.BOLD, 30));
-            gamePanel.add(escolhaLabel, BorderLayout.CENTER);
-            paiola.label.setVisible(true);
-            Principal.setTitle("Jogo de Profemons - Paiola Escolhido"); 
-            gamePanel.revalidate();
-            gamePanel.repaint();
-            esperar(5000);
-
-            equipe[0] = paiola;
-            rejeitados[0] = andrea;
-            rejeitados[1] = lh;
-            quantiadedeprofemons = 1;
-            
-        } else if(e.getSource() == andreaButton && escolha) {
-            gamePanel.removeAll();
-            gamePanel.setLayout(new BorderLayout());
-            JLabel escolhaLabel = new JLabel("Então, você escolheu a Andrea! Ótima escolha.", SwingConstants.CENTER);
-            escolhaLabel.setFont(new Font("Arial", Font.BOLD, 30));
-            gamePanel.add(escolhaLabel, BorderLayout.CENTER);
-            andrea.label.setVisible(true);
-            Principal.setTitle("Jogo de Profemons - Andrea Escolhida");
-            gamePanel.revalidate();
-            gamePanel.repaint();
-            esperar(5000);
-            equipe[0] = andrea;
-            rejeitados[0] = paiola;
-            rejeitados[1] = lh;
-            quantiadedeprofemons = 1;
-            
-        } else if(e.getSource() == lhButton && escolha) {
-            gamePanel.removeAll();
-            gamePanel.setLayout(new BorderLayout());
-            JLabel escolhaLabel = new JLabel("Maravilha você escolheu o Lh! Muito bem.", SwingConstants.CENTER);
-            escolhaLabel.setFont(new Font("Arial", Font.BOLD, 30));
-            gamePanel.add(escolhaLabel, BorderLayout.CENTER);
-            lh.label.setVisible(true);
-            Principal.setTitle("Jogo de Profemons - Lh Escolhido");
-            gamePanel.revalidate();
-            gamePanel.repaint();
-            esperar(5000);
-            equipe[0] = lh;
-            rejeitados[0] = paiola;
-            rejeitados[1] = andrea;
-            quantiadedeprofemons = 1;
-            
-        }
     }
 
     public Boolean batalha(profemon[] equipe, inimigos[] inimigue, ImageIcon fundo){
@@ -375,8 +484,6 @@ public class jogo implements ActionListener{
         
         double modificardordetipoprof = 1;
         double modificadordetipoinimigo = 1;
-
-        
         
         if(quantiadedeprofemons == 1){
             prof = equipe[0];
@@ -475,7 +582,6 @@ public class jogo implements ActionListener{
                         indice = 3;
                     }
                 });
-
                 
                 acoesPanel.add(ataque1Button);
                 acoesPanel.add(ataque2Button);
@@ -526,8 +632,6 @@ public class jogo implements ActionListener{
                     modificadordetipoinimigo = 1.5;
                 }
 
-
-                
                 int indiceinimigo = (int) (Math.random() * 4);
                 
                 double danoini = ((3.0 * inimigo.ataque * inimigo.poderdosataques[indiceinimigo]) / (prof.defesa + 50.0)) * modificadordetipoinimigo;
@@ -584,7 +688,16 @@ public class jogo implements ActionListener{
                 aux2--;
                 if(aux2 > 0) {
                     contador++;
+
                     inimigo = inimigue[contador];
+
+                    inimigo.label = new JLabel(inimigo.imagemfrente); 
+                    inimigo.label.setBounds(800, 250, 250, 300);
+                    fundobatalha.add(inimigo.label);
+
+                    inimigoLabel.setText(inimigo.nome + " (Vida: " + inimigo.vida + ")");
+                    fundobatalha.revalidate();
+                    fundobatalha.repaint();
                 } else {
                     vitoria = true;
                     break;
@@ -683,4 +796,210 @@ public class jogo implements ActionListener{
             Thread.currentThread().interrupt();
         }
     }
+
+    boolean CapturaProfemon(profemon prof1, profemon prof2, profemon prof3){
+        
+        JButton prof1botao = new JButton(prof1.imagemfrente);
+        JButton prof2botao = new JButton(prof2.imagemfrente);
+        JButton prof3botao = new JButton(prof3.imagemfrente);
+
+        prof1botao.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    if(!escolha) {
+                        prof1.mostrarCaracteristicas();
+
+                    }else {
+                        Principal.setTitle("Jogo de Profemons - "+ prof1.nome +" Escolhido"); 
+                        gamePanel.revalidate();
+                        gamePanel.repaint();
+
+                        equipe[quantiadedeprofemons++] = prof1;
+
+                        boolean flag = false;
+                        for(profemon profezinho : rejeitados){
+                            if(profezinho == prof2) flag = true;
+                        }
+                        if(!flag)rejeitados[quantidaderejeitados++] = prof2;
+
+                        flag = false;
+                        for(profemon profezinho : rejeitados){
+                            if(profezinho == prof3) flag = true;
+                        }
+                        if(!flag)rejeitados[quantidaderejeitados++] = prof3;
+                        escolhafinal = true;
+                        }
+                    }
+        });
+
+        prof2botao.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    if(!escolha) {
+                        prof2.mostrarCaracteristicas();
+
+                    }else {
+                        Principal.setTitle("Jogo de Profemons - "+ prof2.nome +" Escolhido"); 
+                        gamePanel.revalidate();
+                        gamePanel.repaint();
+
+                        equipe[quantiadedeprofemons++] = prof2;
+
+                        boolean flag = false;
+                        for(profemon profezinho : rejeitados){
+                            if(profezinho == prof1) flag = true;
+                        }
+                        if(!flag)rejeitados[quantidaderejeitados++] = prof1;
+                        
+                        flag = false;
+                        for(profemon profezinho : rejeitados){
+                            if(profezinho == prof3) flag = true;
+                        }
+                        if(!flag)rejeitados[quantidaderejeitados++] = prof3;
+                        escolhafinal = true;
+                        }
+                    }
+        });
+        prof3botao.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    if(!escolha) {
+                        prof3.mostrarCaracteristicas();
+
+                    }else {
+                        Principal.setTitle("Jogo de Profemons - "+ prof3.nome +" Escolhido"); 
+                        gamePanel.revalidate();
+                        gamePanel.repaint();
+
+                        equipe[quantiadedeprofemons++] = prof3;
+
+                        boolean flag = false;
+                        for(profemon profezinho : rejeitados){
+                            if(profezinho == prof2) flag = true;
+                        }
+                        if(!flag)rejeitados[quantidaderejeitados++] = prof2;
+                        
+                        flag = false;
+                        for(profemon profezinho : rejeitados){
+                            if(profezinho == prof1) flag = true;
+                        }
+                        if(!flag)rejeitados[quantidaderejeitados++] = prof1;
+                        escolhafinal = true;
+                        }
+                        
+                    }
+        });
+
+        prof1botao.setFont(new Font("Arial", Font.BOLD, 20));
+        prof2botao.setFont(new Font("Arial", Font.BOLD, 20));
+        prof3botao.setFont(new Font("Arial", Font.BOLD, 20));
+        
+        prof1botao.setIcon(prof1.imagemfrente);
+        prof2botao.setIcon(prof2.imagemfrente);
+        prof3botao.setIcon(prof3.imagemfrente);
+
+
+        profemonsPanel.setLayout(new GridLayout(1,3));
+
+        profemonsPanel.add(prof1botao);
+        profemonsPanel.add(prof2botao);
+        profemonsPanel.add(prof3botao);
+
+        gamePanel.add(profemonsPanel, BorderLayout.CENTER);
+
+        escolhaButton.setFont(new Font("Arial", Font.BOLD, 20));
+
+        
+        gamePanel.add(escolhaButton, BorderLayout.SOUTH);
+        escolhaButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                escolha = true;
+            }
+        });
+
+        gamePanel.revalidate();
+
+        while (!escolha) {
+            esperar(100);
+            Principal.setTitle("Jogo de Profemons - Aguardando Escolha do Profemon");
+        }
+        
+
+        gamePanel.remove(escolhaButton);
+        gamePanel.revalidate();
+
+        for(profemon profezinho : rejeitados){
+            if(profezinho == prof1) prof1botao.setEnabled(false);
+        }
+        for(profemon profezinho : rejeitados){
+            if(profezinho == prof2) prof2botao.setEnabled(false);
+        }
+        for(profemon profezinho : rejeitados){
+            if(profezinho == prof3) prof3botao.setEnabled(false);
+        }
+
+        while(!escolhafinal) {
+            esperar(100);
+            Principal.setTitle("Jogo de Profemons - Aguardando Escolha do Profemon");
+        }
+        prof2botao.setEnabled(true);
+        prof3botao.setEnabled(true);
+        profemonsPanel.remove(prof1botao);
+        profemonsPanel.remove(prof2botao);
+        profemonsPanel.remove(prof3botao);
+        escolha = false;
+        escolhafinal = false;
+        return true;
+    }
+
+    void telaescolherprofemon(profemon prof1, profemon prof2, profemon prof3){
+        gamePanel.removeAll();
+        gamePanel.setLayout(new BorderLayout());
+
+        
+        gameLabel.setText("Escolha seu Profemon:\n\n");
+        gamePanel.add(gameLabel, BorderLayout.NORTH);
+
+
+       escolheuprof  = CapturaProfemon(prof1,prof2,prof3);
+
+        while (!escolheuprof) {
+            esperar(100);
+            Principal.setTitle("Jogo de Profemons - Aguardando Escolha do Profemon");
+        }
+        
+        escolheuprof = false;
+
+        
+        gamePanel.removeAll();
+        Principal.revalidate();
+
+        gamePanel.add(fundoLabel);
+
+        Principal.setTitle("Jogo de Profemons - " + equipe[0].nome + " Escolhido");
+        gameLabel.setText("Você escolheu " + equipe[0].nome + "! Preparem-se para a aventura!");
+        gameLabel.setBounds(50, 335, 1000, 50); // mantém a posição centralizada
+
+        fundoLabel.setIcon(PrimeiroDeMaio);
+        fundoLabel.setBounds(0, 0, 1200, 720);
+        fundoLabel.add(gameLabel);
+
+        gamePanel.setLayout(null);
+        gamePanel.add(fundoLabel);
+        gamePanel.repaint();
+        gamePanel.revalidate();
+        esperar(5000);
+    }
+
+    void limpaequipe(personagens [] equipe){
+        for (int i = 0; i < equipe.length; i++) {
+        equipe[i] = null;
+        }
+    }
+    void reviveEquipe(profemon[] equipe) {
+    for (profemon profem : equipe) {
+        if (profem != null) {
+            profem.reviveu(profem.vidamaxima);
+            JOptionPane.showMessageDialog(Principal, profem.nome + " reviveu!");
+        }
+    }
+}
+
 }
