@@ -290,6 +290,44 @@ public class jogo implements ActionListener{
             });
             esperar(2000);
 
+            if (quantiadedeprofemons < 6) {
+                SwingUtilities.invokeLater(() -> {
+                    gameLabel.setText("Como recompensa, escolha um novo profemon!");
+                    fundoLabel.revalidate();
+                    gamePanel.revalidate();
+                });
+                esperar(3000);
+                profemon []profes = new profemon[6];
+                profes[0] = lh;
+                profes[1] = matheus;
+                profes[2] = emilia;
+                profes[3] = paiola;
+                profes[4] = douglas;
+                profes[5] = andrea;
+                boolean indicador = false;
+                profemon []passar = new profemon[3];
+                int qnt=0;
+                for(profemon profi : profes){
+                    for(profemon membro : equipe){
+                        if(profi == membro){ 
+                            indicador = true;
+                            break;
+                        }
+                    }
+                    if(!indicador){
+                        indicador = false;
+                        passar[qnt++] = profi;
+                        if(qnt == 3) break;
+                    }
+                }
+                if(passar[1] == null) passar[1] = andrea;
+                if(passar[2] == null) passar[2] = paiola;
+                
+
+                telaescolherprofemon(passar[0], passar[1], passar[2]);
+                quantiadedeprofemons++;
+            }
+
             synchronized (lock) {
                 lock.notify();
             }
