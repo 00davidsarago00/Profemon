@@ -18,11 +18,10 @@ public abstract class profemon extends personagens {
     
 
     public void mostrarCaracteristicas(){
-        JLabel foto = new JLabel(this.imagem);
         JFrame FCaracteristicas = new JFrame("Características do Profemon");
         FCaracteristicas.setSize(1000,800); 
         FCaracteristicas.setLayout(new FlowLayout());
-        FCaracteristicas.add(foto);
+        FCaracteristicas.add(this.label);
 
         JLabel caracteristicaslabel = new JLabel("Nome: " + nome + " | Tipo: " + tipo + " | Nível: " + nivel + " | Vida: " + vida + " | Ataque: " + ataque + " | Defesa: " + defesa);
         caracteristicaslabel.setFont(new Font("Arial", Font.BOLD, 20));
@@ -33,18 +32,18 @@ public abstract class profemon extends personagens {
     }
 
     public synchronized void receberDano(int dano, inimigos Autor) {
-        this.vida -= dano/this.defesa;
+        this.vida -= dano;
         if (this.vida <= 0) {
             derrotado();
         }
     }
 
     public void derrotado() {
-        JOptionPane.showMessageDialog(null, nome + " foi derrotado!");
         this.vida = 0;
-        this.label.setIcon(new ImageIcon("Sprints/" + nome + evolucao +"derrotado.png"));
+        this.label.setIcon(imagemderrotado);
+        JOptionPane.showMessageDialog(null, nome + " foi derrotado!");
         try{
-            Thread.sleep(5000); 
+            Thread.sleep(2500); 
             this.label.setVisible(false); 
         }catch (InterruptedException e) {}
         
@@ -55,7 +54,7 @@ public abstract class profemon extends personagens {
         this.vida = vidaRestaurada; 
 
         JOptionPane.showMessageDialog(null, nome + " foi revivido e sua vida foi restaurada!");
-        this.label.setIcon(new ImageIcon("Sprints/" + nome + evolucao + ".png"));
+        this.label.setIcon(new ImageIcon("Sprints/" + nome + evolucao +  "Front.png"));
     }
 
     public void evoluirdenivel() {
@@ -81,8 +80,6 @@ public abstract class profemon extends personagens {
         defesa *= 2;
         vida *= 5;
         JOptionPane.showMessageDialog(null, nome + " evoluiu para o nível " + nivel + " e ganhou um aumento significativo em suas habilidades!");
-        imagem = new ImageIcon(ProfEvoluido);
-        label.setIcon(imagem);
     }
 
     public void EliminouInimigo(int experienciaGanha) {
