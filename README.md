@@ -17,15 +17,18 @@ O jogo possui uma narrativa onde o jogador é um "jovem universitário" que deve
 - **`Paiola.java`** - Profemon baseado no professor Paiola (tipo Programador)
 - **`Andrea.java`** - Profemon baseado na professora Andrea (tipo Programador)  
 - **`LH.java`** - Profemon baseado no professor LH (tipo Matemático)
+- **`Douglas.java`** - Profemon baseado no professor Douglas (tipo Programador)
+- **`Emilia.java`** - Profemon baseado na professora Emilia (tipo Matemático)
+- **`Matheus.java`** - Profemon baseado no professor Matheus (tipo Engenheiro)
 
 ### 🎨 Recursos Gráficos
-- **`Sprints/`** - Diretório contendo sprites dos personagens:
-  - `andrea_vianna.jpeg` - Sprite da Andrea
-  - `douglas_rodrigues.png` - Sprite do Douglas
-  - `emilia_marques.jpeg` - Sprite da Emilia
-  - `luiz_henrique.png` - Sprite do LH
-  - `matheus_vieira.png` - Sprite do Matheus
-  - `paiola.png` - Sprite do Paiola
+- **`Sprints/`** - Diretório contendo sprites dos personagens e elementos visuais:
+  - Sprites dos Profemons: Andrea, Douglas, Emilia, LH, Matheus, Paiola (Front, Back e PB)
+  - Sprites de inimigos: Boss1, Boss2, CaisTharla, Cherrys, FluFlu
+  - Animações de ataques: AttackBuff.gif, AttackLight.gif, AttackMid.gif, AttackUlt.gif
+  - Ícones especiais: IconCaixaDeVetores.png, IconNotebook.png
+- **`Backgrounds/`** - Diretório com cenários de fundo:
+  - Biblioteca_BG.png, LEPEC_BG.png, Portaria_BG.png, PrimeiroDeMaio_BG.png, RU_BG.png
 
 ## 🏛️ Arquitetura do Sistema
 
@@ -36,7 +39,10 @@ personagens (abstract)
 ├── profemon (abstract)
 │   ├── Paiola (concrete) - Tipo: Programador
 │   ├── Andrea (concrete) - Tipo: Programador
-│   └── LH (concrete) - Tipo: Matemático
+│   ├── LH (concrete) - Tipo: Matemático
+│   ├── Douglas (concrete) - Tipo: Programador
+│   ├── Emilia (concrete) - Tipo: Matemático
+│   └── Matheus (concrete) - Tipo: Engenheiro
 └── inimigos (abstract)
     └── inimigoPetista (concrete)
 ```
@@ -106,26 +112,48 @@ Estende `personagens` e representa os adversários:
 
 #### 👨‍💻 Paiola
 - **Tipo:** Programador
-- **Atributos Iniciais:** Vida: 100, Ataque: 20, Nível: 1
+- **Atributos Iniciais:** Vida: 100, Ataque: 20, Defesa: 20, Nível: 1
 - **Velocidades de Ataque:** [10, 15, 20, 25]
 
 #### 👩‍💻 Andrea  
 - **Tipo:** Programador
-- **Atributos Iniciais:** Vida: 100, Ataque: 20, Nível: 1
+- **Atributos Iniciais:** Vida: 100, Ataque: 20, Defesa: 20, Nível: 1
 - **Velocidades de Ataque:** [10, 15, 20, 25]
 
 #### 🧮 LH (Luiz Henrique)
 - **Tipo:** Matemático
-- **Atributos Iniciais:** Vida: 100, Ataque: 20, Nível: 1
+- **Atributos Iniciais:** Vida: 100, Ataque: 20, Defesa: 20, Nível: 1
 - **Velocidades de Ataque:** [10, 15, 20, 25]
+
+#### 👨‍💻 Douglas
+- **Tipo:** Programador
+- **Atributos Iniciais:** Vida: 80, Ataque: 115, Defesa: 75, Nível: 1
+- **Velocidades de Ataque:** [85, 60, 70, 45]
+- **Características:** Alto ataque, defesa moderada
+
+#### 👩‍🔬 Emilia
+- **Tipo:** Matemático
+- **Atributos Iniciais:** Vida: 130, Ataque: 60, Defesa: 115, Nível: 1
+- **Velocidades de Ataque:** [80, 50, 65, 40]
+- **Características:** Alta vida e defesa, focado em resistência
+
+#### 👨‍🔧 Matheus
+- **Tipo:** Engenheiro
+- **Atributos Iniciais:** Vida: 110, Ataque: 70, Defesa: 95, Nível: 1
+- **Velocidades de Ataque:** [75, 55, 60, 30]
+- **Características:** Estatísticas balanceadas, versatilidade
 
 ### 🏴‍☠️ Implementação Concreta: `inimigoPetista`
 
 Primeira implementação concreta de um inimigo com:
+- **Nome:** Petista
+- **Tipo:** EntraçonoRU
 - **Vida:** 13
 - **Ataque:** 13  
 - **Defesa:** 13
+- **Velocidade:** 13
 - **Sprite:** "petista.png"
+- **Velocidades de Ataque:** [10, 15, 20, 25]
 
 ## ⚡ Funcionalidades Implementadas
 
@@ -173,38 +201,44 @@ O projeto utiliza extensivamente threading para:
 
 ### ✅ Funcionalidades Completas
 - Estrutura completa de classes com herança bem definida
-- Sistema de combate totalmente funcional
+- Sistema de combate totalmente funcional com 4 ataques por personagem
 - Mecânicas de evolução e progressão implementadas
 - Interface gráfica principal com seleção de personagem
 - Sistema de threading para animações e movimento
-- Três Profemons jogáveis totalmente implementados
+- **Seis Profemons jogáveis** totalmente implementados (Paiola, Andrea, LH, Douglas, Emilia, Matheus)
 - Sistema de experiência e níveis funcionando
+- Sistema de sprites evolutivos com Front/Back/PB (Preto e Branco)
+- Múltiplos cenários de fundo implementados
+- Animações de ataques com GIFs
+- Sistema de fases progressivas no jogo principal
 
 ### 🚧 Em Desenvolvimento
-- Sistema de batalha em tempo real
-- Implementação dos 4 ataques específicos para cada Profemon
-- Mais variedades de inimigos
-- Sistema de mapas e cenários
+- Sistema de batalha em tempo real completamente integrado
+- Implementação de mais variedades de inimigos (Fluflu, Boss1, Boss2, etc.)
+- Sistema completo de mapas e cenários com os backgrounds disponíveis
+- Sistema de itens e poder-ups
+- Balanceamento avançado entre os diferentes tipos de Profemon
 
 ### ❌ Pendências
-- Completar a lógica de batalha na classe `jogo`
-- Implementar ataques específicos (ataque1-4) para cada Profemon
-- Adicionar mais tipos de inimigos além do `inimigoPetista`
+- Completar a lógica de batalha avançada na classe `jogo`
+- Implementar classes para inimigos Fluflu, Boss1, Boss2, CaisTharla, Cherrys
+- Integrar os cenários de fundo (Backgrounds/) no gameplay
 - Sistema de save/load de progresso
-- Balanceamento de dificuldade
+- Implementar sistema de tipos com vantagens/desvantagens
+- Adicionar trilha sonora e efeitos sonoros
 
 ## 🚀 Próximos Passos Sugeridos
 
 ### 🎯 Prioridade Alta
-1. **Completar Sistema de Batalha:** Implementar a lógica de combate em tempo real na classe `jogo`
-2. **Implementar Ataques Específicos:** Criar os 4 ataques únicos para cada Profemon
-3. **Adicionar Mais Inimigos:** Criar diversidade de adversários com diferentes características
-4. **Sistema de Mapas:** Implementar cenários e navegação entre áreas
+1. **Implementar Classes de Inimigos Faltantes:** Criar Fluflu, Boss1, Boss2, CaisTharla, Cherrys
+2. **Integração de Cenários:** Utilizar os backgrounds disponíveis no sistema de mapas
+3. **Sistema de Tipos:** Implementar vantagens/desvantagens entre Programador, Matemático e Engenheiro
+4. **Balanceamento:** Ajustar atributos dos Profemons para gameplay equilibrado
 
 ### 🎯 Prioridade Média  
-5. **Melhorias na Interface:** Sistema de menus mais robusto e intuitivo
+5. **Sistema de Narrativa:** Expandir a história com os cenários disponíveis
 6. **Sistema de Inventário:** Itens, poções e equipamentos
-7. **Mais Profemons:** Expandir o elenco de personagens jogáveis
+7. **Animações Avançadas:** Utilizar os GIFs de ataque disponíveis
 8. **Sistema de Save/Load:** Persistência de progresso do jogador
 
 ### 🎯 Melhorias Futuras
@@ -264,14 +298,28 @@ Profemon/
 ├── 📄 Paiola.java           # Profemon do Professor Paiola
 ├── 📄 Andrea.java           # Profemon da Professora Andrea
 ├── 📄 LH.java               # Profemon do Professor LH
+├── 📄 Douglas.java          # Profemon do Professor Douglas
+├── 📄 Emilia.java           # Profemon da Professora Emilia
+├── 📄 Matheus.java          # Profemon do Professor Matheus
 ├── 📄 README.md             # Esta documentação
-└── 📁 Sprints/              # Diretório de sprites
-    ├── 🖼️ andrea_vianna.jpeg
-    ├── 🖼️ douglas_rodrigues.png
-    ├── 🖼️ emilia_marques.jpeg
-    ├── 🖼️ luiz_henrique.png
-    ├── 🖼️ matheus_vieira.png
-    └── 🖼️ paiola.png
+├── 📁 Sprints/              # Diretório de sprites e animações
+│   ├── 🖼️ Andrea1Front.png, Andrea1Back.png, Andrea1BackPB.png
+│   ├── 🖼️ Douglas1Front.png, Douglas1Back.png, Douglas1BackPB.png
+│   ├── 🖼️ Emilia1Front.png, Emilia1Back.png, Emilia1BackPB.png
+│   ├── 🖼️ Lh1Front.png, Lh1Back.png, Lh1BackPB.png
+│   ├── 🖼️ Matheus1Front.png, Matheus1Back.png, Matheus1BackPB.png
+│   ├── 🖼️ Paiola1Front.png, Paiola1Back.png, Paiola1BackPB.png
+│   ├── 🖼️ Boss1.png, Boss1PB.png, Boss2.png, Boss2PB.png
+│   ├── 🖼️ FluFlu.png, FluFluPB.png, CaisTharla.png, CaisTharlaPB.png
+│   ├── 🖼️ Cherrys.png, CherrysPB.png
+│   ├── 🎬 AttackBuff.gif, AttackLight.gif, AttackMid.gif, AttackUlt.gif
+│   └── 🎯 IconCaixaDeVetores.png, IconNotebook.png
+└── 📁 Backgrounds/          # Diretório de cenários
+    ├── 🏛️ Biblioteca_BG.png
+    ├── 🏢 LEPEC_BG.png
+    ├── � Portaria_BG.png
+    ├── 🏭 PrimeiroDeMaio_BG.png
+    └── 🍽️ RU_BG.png
 ```
 
 ## 🎯 Características do Design
@@ -318,7 +366,7 @@ catch (InterruptedException e) {
 - Todas as classes abstratas devem ter implementações concretas
 - Sprites devem seguir convenção: `nome + nivel + .png`
 - Threading deve sempre tratar InterruptedException
-- Métodos synchronized são necessários para combat
+- Métodos synchronized são necessários para combate seguro entre threads
 
 ### 🎮 Para Jogadores
 - Use as características dos Profemons para escolher estratégias
@@ -330,3 +378,13 @@ catch (InterruptedException e) {
 **📅 Última Atualização:** Julho 2025  
 **👥 Desenvolvido por:** Equipe de Desenvolvimento Profemon  
 **📧 Contato:** Para dúvidas sobre o projeto, consulte a documentação no código
+
+## 📊 Estatísticas do Projeto
+
+- **Total de Classes:** 11 arquivos Java
+- **Profemons Disponíveis:** 6 (Paiola, Andrea, LH, Douglas, Emilia, Matheus)
+- **Tipos de Profemon:** 3 (Programador, Matemático, Engenheiro)
+- **Sprites Implementados:** 33+ arquivos de imagem
+- **Cenários Disponíveis:** 5 backgrounds temáticos
+- **Animações:** 4 GIFs de ataques especiais
+- **Sistema de Fases:** 4 fases progressivas implementadas
