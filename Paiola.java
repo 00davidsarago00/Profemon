@@ -13,10 +13,13 @@ public class Paiola extends profemon {
         this.evolucao = 1;
         this.vidamaxima = 110;
         
-        imagemfrente = new ImageIcon("Sprints/" + nome + nivel + "Front" + ".png");
-        imagemcostas = new ImageIcon("Sprints/" + nome + nivel + "Back" + ".png");
-        imagemfrente = new ImageIcon(imagemfrente.getImage().getScaledInstance(550, 550, Image.SCALE_SMOOTH));
-        imagemcostas = new ImageIcon(imagemcostas.getImage().getScaledInstance(550, 550, Image.SCALE_SMOOTH));
+        this.imagemfrente = new ImageIcon("Sprints/" + nome + "1" + "Front" + ".png");
+        this.imagemcostas = new ImageIcon("Sprints/" + nome + "1" + "Back" + ".png");
+        this.imagemderrotado = new ImageIcon("Sprints/" + nome + "1" + "Back" + "BG.png");
+        
+        imagemderrotado = new ImageIcon(imagemderrotado.getImage().getScaledInstance(200, 300, Image.SCALE_SMOOTH));
+        imagemfrente = new ImageIcon(imagemfrente.getImage().getScaledInstance(400, 600, Image.SCALE_SMOOTH));
+        imagemcostas = new ImageIcon(imagemcostas.getImage().getScaledInstance(400, 600, Image.SCALE_SMOOTH));
         
         this.label = new JLabel(imagemfrente);
         
@@ -30,7 +33,11 @@ public class Paiola extends profemon {
         this.poderdosataques[1] = 0;
         this.poderdosataques[2] = 70;
         this.poderdosataques[3] = 120; 
-           
+        
+        this.nomedosataques[0] = "Compilação Rápida";
+        this.nomedosataques[1] = "Ponteiro Nulo";
+        this.nomedosataques[2] = "Alocação Dinâmica";
+        this.nomedosataques[3] = "Garbage Collector";
     }
     
 }
