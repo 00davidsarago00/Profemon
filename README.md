@@ -13,7 +13,7 @@ O jogo possui uma narrativa onde o jogador é um "jovem universitário" que deve
 - **`personagens.java`** - Classe abstrata base para todos os personagens
 - **`profemon.java`** - Classe abstrata para personagens jogáveis com sistema de evolução
 - **`inimigos.java`** - Classe abstrata para personagens inimigos com IA de movimento
-- **`inimigoPadrão.java`** - Implementação concreta de um inimigo
+- **`Boss1.java`**, **`Boss2.java`**, **`Fluflu.java`**, **`CaisTharla.java`**, **`Cherries.java`** - Implementações concretas de inimigos diversos
 - **`Paiola.java`** - Profemon baseado no professor Paiola (tipo Programador)
 - **`Andrea.java`** - Profemon baseado na professora Andrea (tipo Programador)  
 - **`LH.java`** - Profemon baseado no professor LH (tipo Matemático)
@@ -44,7 +44,11 @@ personagens (abstract)
 │   ├── Emilia (concrete) - Tipo: Matemático
 │   └── Matheus (concrete) - Tipo: Engenheiro
 └── inimigos (abstract)
-    └── inimigoPadrão (concrete)
+    ├── Boss1 (concrete) - Paradoxo Compilado
+    ├── Boss2 (concrete) - Segundo Boss
+    ├── Fluflu (concrete) - Tipo: Engenheiro
+    ├── CaisTharla (concrete) - Tipo: Matemático
+    └── Cherries (concrete) - Tipo: Programador
 ```
 
 ### 🏗️ Classe Base: `personagens`
@@ -143,17 +147,48 @@ Estende `personagens` e representa os adversários:
 - **Velocidades de Ataque:** [75, 55, 60, 30]
 - **Características:** Estatísticas balanceadas, versatilidade
 
-### 🏴‍☠️ Implementação Concreta: `inimigoPadrão`
+### 🏴‍☠️ Inimigos Implementados
 
-Primeira implementação concreta de um inimigo com:
-- **Nome:** Padrão
-- **Tipo:** EntraçonoRU
-- **Vida:** 13
-- **Ataque:** 13  
-- **Defesa:** 13
-- **Velocidade:** 13
-- **Sprite:** "Padrão.png"
-- **Velocidades de Ataque:** [10, 15, 20, 25]
+#### 🤖 Boss1 - "Paradoxo Compilado"
+- **Nome:** Paradoxo Compilado
+- **Tipo:** Programador
+- **Vida:** 200
+- **Ataque:** 80
+- **Defesa:** 170
+- **Velocidades de Ataque:** [60, 70, 50, 40]
+- **Poder dos Ataques:** [0, 70, 85, 110]
+- **Características:** Boss defensivo com alta resistência
+
+#### 👾 Boss2
+- **Tipo:** Boss de segundo nível
+- **Características:** Boss intermediário com atributos balanceados
+
+#### 🐾 Fluflu
+- **Tipo:** Engenheiro
+- **Vida:** 68
+- **Ataque:** 95
+- **Defesa:** 60
+- **Velocidades de Ataque:** [70, 60, 0, 0]
+- **Poder dos Ataques:** [55, 0, 0, 0]
+- **Características:** Inimigo ágil focado em ataques rápidos
+
+#### 🧮 CaisTharla
+- **Tipo:** Matemático
+- **Vida:** 140
+- **Ataque:** 50
+- **Defesa:** 100
+- **Velocidades de Ataque:** [40, 30, 50, 0]
+- **Poder dos Ataques:** [60, 0, 50, 0]
+- **Características:** Tank matemático com alta defesa
+
+#### 🍒 Cherries (Cherrys)
+- **Tipo:** Programador
+- **Vida:** 65
+- **Ataque:** 95
+- **Defesa:** 60
+- **Velocidades de Ataque:** [95, 85, 0, 0]
+- **Poder dos Ataques:** [30, 35, 0, 0]
+- **Características:** Inimigo veloz com ataques rápidos
 
 ## ⚡ Funcionalidades Implementadas
 
@@ -230,17 +265,22 @@ O jogo implementa um sistema progressivo de fases:
 classDiagram
     class personagens {
         <<abstract>>
-        +String nome, tipo
-        +int vida, ataque, defesa
+        +String nome
+        +String tipo
+        +int vida
+        +int ataque
+        +int defesa
         +int[] velocidadedosataques
         +ImageIcon imagemFrente
-        +receberDano()
+        +receberDano() abstract
         +derrotado() abstract
     }
     
     class profemon {
         <<abstract>>
-        +int nivel, experiencia, evolucao
+        +int nivel
+        +int experiencia
+        +int evolucao
         +synchronized receberDano()
         +mostrarCaracteristicas()
         +evoluirdenivel()
@@ -252,15 +292,19 @@ classDiagram
         +derrotado()
     }
     
-    personagens <|-- profemon
-    personagens <|-- inimigos
-    profemon <|-- Paiola
-    profemon <|-- Andrea
-    profemon <|-- LH
-    profemon <|-- Douglas
-    profemon <|-- Emilia
-    profemon <|-- Matheus
-    inimigos <|-- inimigoPadrão
+    personagens --|> profemon
+    personagens --|> inimigos
+    profemon --|> Paiola
+    profemon --|> Andrea
+    profemon --|> LH
+    profemon --|> Douglas
+    profemon --|> Emilia
+    profemon --|> Matheus
+    inimigos --|> Boss1
+    inimigos --|> Boss2
+    inimigos --|> Fluflu
+    inimigos --|> CaisTharla
+    inimigos --|> Cherries
 ```
 
 ### 🧵 Sistema de Threading e Concorrência
@@ -341,34 +385,35 @@ graph TB
 - Interface gráfica principal com seleção de personagem
 - Sistema de threading para animações e movimento
 - **Seis Profemons jogáveis** totalmente implementados (Paiola, Andrea, LH, Douglas, Emilia, Matheus)
+- **Cinco tipos de inimigos** implementados (Boss1, Boss2, Fluflu, CaisTharla, Cherries)
 - Sistema de experiência e níveis funcionando
 - Sistema de sprites evolutivos com Front/Back/PB (Preto e Branco)
 - Múltiplos cenários de fundo implementados
 - Animações de ataques com GIFs
 - Sistema de fases progressivas no jogo principal
+- Diversidade de tipos de inimigos (Programador, Matemático, Engenheiro)
 
 ### 🚧 Em Desenvolvimento
 - Sistema de batalha em tempo real completamente integrado
-- Implementação de mais variedades de inimigos (Fluflu, Boss1, Boss2, etc.)
 - Sistema completo de mapas e cenários com os backgrounds disponíveis
 - Sistema de itens e poder-ups
-- Balanceamento avançado entre os diferentes tipos de Profemon
+- Balanceamento avançado entre os diferentes tipos de Profemon e inimigos
 
 ### ❌ Pendências
 - Completar a lógica de batalha avançada na classe `jogo`
-- Implementar classes para inimigos Fluflu, Boss1, Boss2, CaisTharla, Cherrys
 - Integrar os cenários de fundo (Backgrounds/) no gameplay
 - Sistema de save/load de progresso
 - Implementar sistema de tipos com vantagens/desvantagens
 - Adicionar trilha sonora e efeitos sonoros
+- Balanceamento final dos novos inimigos
 
 ## 🚀 Próximos Passos Sugeridos
 
 ### 🎯 Prioridade Alta
-1. **Implementar Classes de Inimigos Faltantes:** Criar Fluflu, Boss1, Boss2, CaisTharla, Cherrys
+1. **Balanceamento de Inimigos:** Ajustar atributos dos novos inimigos para gameplay equilibrado
 2. **Integração de Cenários:** Utilizar os backgrounds disponíveis no sistema de mapas
 3. **Sistema de Tipos:** Implementar vantagens/desvantagens entre Programador, Matemático e Engenheiro
-4. **Balanceamento:** Ajustar atributos dos Profemons para gameplay equilibrado
+4. **Sistema de Fases Avançado:** Integrar todos os inimigos nas diferentes fases
 
 ### 🎯 Prioridade Média  
 5. **Sistema de Narrativa:** Expandir a história com os cenários disponíveis
@@ -429,14 +474,19 @@ Profemon/
 ├── 📄 personagens.java       # Classe abstrata base
 ├── 📄 profemon.java         # Classe abstrata para jogadores
 ├── 📄 inimigos.java         # Classe abstrata para adversários
-├── 📄 inimigoPadrão.java   # Inimigo concreto implementado
 ├── 📄 Paiola.java           # Profemon do Professor Paiola
 ├── 📄 Andrea.java           # Profemon da Professora Andrea
 ├── 📄 LH.java               # Profemon do Professor LH
 ├── 📄 Douglas.java          # Profemon do Professor Douglas
 ├── 📄 Emilia.java           # Profemon da Professora Emilia
 ├── 📄 Matheus.java          # Profemon do Professor Matheus
+├── 📄 Boss1.java            # Inimigo Boss: Paradoxo Compilado
+├── 📄 Boss2.java            # Inimigo Boss secundário
+├── 📄 Fluflu.java           # Inimigo tipo Engenheiro
+├── 📄 CaisTharla.java       # Inimigo tipo Matemático
+├── 📄 Cherries.java         # Inimigo tipo Programador
 ├── 📄 README.md             # Esta documentação
+├── 📄 RELATORIO_TECNICO.md  # Relatório técnico detalhado
 ├── 📁 Sprints/              # Diretório de sprites e animações
 │   ├── 🖼️ Andrea1Front.png, Andrea1Back.png, Andrea1BackPB.png
 │   ├── 🖼️ Douglas1Front.png, Douglas1Back.png, Douglas1BackPB.png
@@ -452,7 +502,7 @@ Profemon/
 └── 📁 Backgrounds/          # Diretório de cenários
     ├── 🏛️ Biblioteca_BG.png
     ├── 🏢 LEPEC_BG.png
-    ├── � Portaria_BG.png
+    ├── 🚪 Portaria_BG.png
     ├── 🏭 PrimeiroDeMaio_BG.png
     └── 🍽️ RU_BG.png
 ```
@@ -512,13 +562,16 @@ catch (InterruptedException e) {
 
 **📅 Última Atualização:** Julho 2025  
 **👥 Desenvolvido por:** Equipe de Desenvolvimento Profemon  
-**📧 Contato:** Para dúvidas sobre o projeto, consulte a documentação no código
+**📧 Contato:** Para dúvidas sobre o projeto, consulte a documentação no código  
+**🔄 Status:** 5 inimigos implementados, projeto em expansão ativa
 
 ## 📊 Estatísticas do Projeto
 
-- **Total de Classes:** 11 arquivos Java
+- **Total de Classes:** 15 arquivos Java
 - **Profemons Disponíveis:** 6 (Paiola, Andrea, LH, Douglas, Emilia, Matheus)
+- **Inimigos Disponíveis:** 5 (Boss1, Boss2, Fluflu, CaisTharla, Cherries)
 - **Tipos de Profemon:** 3 (Programador, Matemático, Engenheiro)
+- **Tipos de Inimigos:** 3 (Programador, Matemático, Engenheiro)
 - **Sprites Implementados:** 33+ arquivos de imagem
 - **Cenários Disponíveis:** 5 backgrounds temáticos
 - **Animações:** 4 GIFs de ataques especiais

@@ -108,19 +108,43 @@ classDiagram
         +ataque4()
     }
     
-    class inimigoPetista {
-        +inimigoPetista()
+    class inimigoPadrão {
+        +inimigoPadrão()
     }
     
-    personagens <|-- profemon
-    personagens <|-- inimigos
-    profemon <|-- Paiola
-    profemon <|-- Andrea
-    profemon <|-- LH
-    profemon <|-- Douglas
-    profemon <|-- Emilia
-    profemon <|-- Matheus
-    inimigos <|-- inimigoPetista
+    class Boss1 {
+        +Boss1()
+    }
+    
+    class Boss2 {
+        +Boss2()
+    }
+    
+    class Fluflu {
+        +Fluflu()
+    }
+    
+    class CaisTharla {
+        +CaisTharla()
+    }
+    
+    class Cherries {
+        +Cherries()
+    }
+    
+    personagens --|> profemon
+    personagens --|> inimigos
+    profemon --|> Paiola
+    profemon --|> Andrea
+    profemon --|> LH
+    profemon --|> Douglas
+    profemon --|> Emilia
+    profemon --|> Matheus
+    inimigos --|> Boss1
+    inimigos --|> Boss2
+    inimigos --|> Fluflu
+    inimigos --|> CaisTharla
+    inimigos --|> Cherries
     jogo --> profemon : manages
     jogo --> inimigos : manages
     jogo ..|> ActionListener : implements
@@ -213,8 +237,8 @@ classDiagram
         +derrotado() override
     }
     
-    personagens <|-- profemon
-    personagens <|-- inimigos
+    personagens --|> profemon
+    personagens --|> inimigos
 ```
 
 ### 🎮 Strategy Pattern para Ataques
@@ -241,8 +265,8 @@ classDiagram
         +ataque4() "Arquitetura Limpa"
     }
     
-    profemon <|-- Paiola
-    profemon <|-- Andrea
+    profemon --|> Paiola
+    profemon --|> Andrea
 ```
 
 ### 🔔 Observer Pattern para Eventos
@@ -261,42 +285,88 @@ sequenceDiagram
     UI->>UI: Redesenha componentes
 ```
 
-## 🛠️ Stack Tecnológica Detalhada
+## 🐲 Sistema de Inimigos Implementados
 
-### ☕ Core Technologies
+### 📊 Diversidade de Adversários
 
-| Tecnologia | Versão | Propósito | Implementação |
-|------------|--------|-----------|---------------|
-| **Java** | 8+ | Linguagem base | Classes, herança, polimorfismo |
-| **Swing** | JDK Built-in | Interface gráfica | JFrame, JPanel, JButton, JLabel |
-| **AWT** | JDK Built-in | Sistema de eventos | ActionListener, Event Handling |
-| **ImageIcon** | Swing | Gerenciamento de sprites | Carregamento e escalonamento |
-| **Threading** | Java Core | Concorrência | Thread, Runnable, synchronized |
+O projeto agora conta com **cinco tipos diferentes de inimigos**, cada um implementando estratégias e estatísticas únicas:
 
-### 🎨 Bibliotecas Gráficas
+#### 🤖 Boss1 - "Paradoxo Compilado"
+```java
+public class Boss1 extends inimigos {
+    // Estatísticas: Tank defensivo
+    vida = 200, ataque = 80, defesa = 170
+    // Perfil: Boss principal com foco em resistência
+}
+```
+
+#### 👾 Boss2 
+```java
+public class Boss2 extends inimigos {
+    // Boss secundário com características intermediárias
+}
+```
+
+#### 🐾 Fluflu
+```java
+public class Fluflu extends inimigos {
+    // Estatísticas: Atacante ágil
+    vida = 68, ataque = 95, defesa = 60
+    tipo = "Engenheiro"
+    // Perfil: High damage, low defense
+}
+```
+
+#### 🧮 CaisTharla
+```java
+public class CaisTharla extends inimigos {
+    // Estatísticas: Tank matemático
+    vida = 140, ataque = 50, defesa = 100
+    tipo = "Matemático"
+    // Perfil: Resistente com foco defensivo
+}
+```
+
+#### 🍒 Cherries (Cherrys)
+```java
+public class Cherries extends inimigos {
+    // Estatísticas: Velocista
+    vida = 65, ataque = 95, defesa = 60
+    tipo = "Programador"
+    velocidadedosataques = [95, 85, 0, 0]
+    // Perfil: Ataques extremamente rápidos
+}
+```
+
+### 📈 Análise Estatística dos Inimigos
+
+| Inimigo | Tipo | Vida | Ataque | Defesa | Estratégia |
+|---------|------|------|--------|--------|------------|
+| **Boss1** | Programador | 200 | 80 | 170 | Tank defensivo |
+| **Fluflu** | Engenheiro | 68 | 95 | 60 | DPS ágil |
+| **CaisTharla** | Matemático | 140 | 50 | 100 | Tank equilibrado |
+| **Cherries** | Programador | 65 | 95 | 60 | Speedster |
+| **Boss2** | - | - | - | - | Boss intermediário |
+
+### 🎯 Sistema de Balanceamento
 
 ```mermaid
-graph LR
-    A[Java Application] --> B[Swing Framework]
-    B --> C[JFrame Janela Principal]
-    B --> D[JPanel Containers]
-    B --> E[JButton Controles]
-    B --> F[JLabel Sprites]
+graph TD
+    A[Inimigos por Tipo] --> B[Programadores]
+    A --> C[Matemáticos]
+    A --> D[Engenheiros]
     
-    C --> G[BorderLayout]
-    C --> H[GridLayout]
-    C --> I[FlowLayout]
+    B --> E[Boss1 - Tank]
+    B --> F[Cherries - Speed]
     
-    F --> J[ImageIcon]
-    J --> K[PNG GIF Assets]
+    C --> G[CaisTharla - Balanced Tank]
     
-    B --> L[AWT Event System]
-    L --> M[ActionListener]
-    L --> N[Event Queue]
+    D --> H[Fluflu - Glass Cannon]
     
-    style A fill:#e3f2fd
-    style B fill:#f3e5f5
-    style K fill:#e8f5e8
+    style E fill:#ffebee
+    style F fill:#e3f2fd
+    style G fill:#f3e5f5
+    style H fill:#e8f5e8
 ```
 
 ## 🔧 Especificações Técnicas Detalhadas
@@ -389,68 +459,32 @@ flowchart TD
     style J fill:#e3f2fd
 ```
 
-## 🔍 Análise de Performance
+---
 
-### ⚡ Otimizações Implementadas
+## 📊 Status Atual do Projeto (Julho 2025)
 
-1. **Sprite Caching**: ImageIcons carregados uma vez na inicialização
-2. **Thread Separation**: UI não bloqueia durante animações
-3. **Synchronized Methods**: Apenas métodos críticos para performance
-4. **Lazy Loading**: Recursos carregados conforme necessário
+### ✅ Conquistas Recentes
+- **Expansão de Inimigos:** Implementação completa de 5 tipos de inimigos diferentes
+- **Diversidade de Tipos:** Todos os 3 tipos (Programador, Matemático, Engenheiro) representados nos inimigos
+- **Balanceamento Estatístico:** Diferentes perfis de combate (Tank, DPS, Speed, Balanced)
+- **Arquitetura Sólida:** Herança bem estruturada permitindo expansão fácil
 
-### 📊 Métricas de Complexidade
+### 🎯 Impacto Técnico
+- **Escalabilidade Comprovada:** A arquitetura permitiu adicionar 5 inimigos sem quebrar o código existente
+- **Polimorfismo Efetivo:** Sistema de herança funcionando perfeitamente para novos personagens
+- **Manutenibilidade:** Código limpo e bem documentado facilitando futuras expansões
 
-| Métrica | Valor | Observação |
-|---------|-------|------------|
-| **Classes Totais** | 11 | Hierarquia bem definida |
-| **Métodos Abstratos** | 7 | Template methods |
-| **Threads Concorrentes** | 2-5 | Dependendo da fase |
-| **Sprites Gerenciados** | 33+ | Sistema de cache eficiente |
-| **Cyclomatic Complexity** | Baixa | Métodos focados e coesos |
+### 🔮 Próximas Evoluções Técnicas
+1. **Sistema de IA Avançada:** Implementar diferentes estratégias de combate por tipo
+2. **Design Patterns Adicionais:** Considerar Command Pattern para ataques e State Pattern para fases
+3. **Performance Optimization:** Cache de sprites e otimização de threading
+4. **Arquitetura de Plugins:** Permitir adição de novos conteúdos sem recompilação
 
-### 🏗️ Escalabilidade
+**Esta arquitetura robusta e expansível confirma a solidez dos princípios de design aplicados, demonstrando a capacidade do sistema de crescer organicamente mantendo a qualidade do código.**
 
-```mermaid
-graph TB
-    A[Profemon Framework] --> B[Novos Tipos]
-    A --> C[Novos Inimigos]
-    A --> D[Novos Cenarios]
-    A --> E[Novas Mecanicas]
-    
-    B --> F[Heranca de profemon]
-    C --> G[Heranca de inimigos]
-    D --> H[Sistema de Backgrounds]
-    E --> I[Extensao de personagens]
-    
-    style A fill:#fff3e0
-    style F fill:#e8f5e8
-    style G fill:#ffebee
-    style H fill:#e3f2fd
-    style I fill:#f3e5f5
-```
+---
 
-## 🚀 Vantagens Arquiteturais
-
-### ✅ Pontos Fortes
-- **Extensibilidade**: Fácil adição de novos Profemons via herança
-- **Manutenibilidade**: Separação clara de responsabilidades
-- **Reutilização**: Código base compartilhado entre personagens
-- **Thread Safety**: Sincronização adequada em métodos críticos
-- **Performance**: UI responsiva com threading apropriado
-
-### 🎯 Design Patterns Benefícios
-- **Template Method**: Evita duplicação de código
-- **Strategy**: Permite diferentes implementações de ataques
-- **Observer**: Desacoplamento entre UI e lógica de negócio
-- **Factory (Implícito)**: Criação flexível de personagens
-
-## 🔮 Possibilidades de Expansão
-
-### 🌟 Melhorias Arquiteturais Sugeridas
-1. **Dependency Injection**: Para maior testabilidade
-2. **Command Pattern**: Para sistema de undo/redo
-3. **State Machine**: Para controle mais robusto de estados
-4. **Plugin Architecture**: Para mods e extensões
-5. **MVC Pattern**: Separação mais clara entre Model, View e Controller
-
-Esta arquitetura robusta fornece uma base sólida para o crescimento futuro do projeto, mantendo a flexibilidade e performance necessárias para um jogo responsivo e escalável.
+**📅 Relatório Atualizado:** Julho 2025  
+**🔧 Versão da Arquitetura:** 2.0 - Expansão de Inimigos  
+**📈 Complexidade do Sistema:** Média-Alta, bem gerenciada através de padrões de design  
+**🎮 Status de Desenvolvimento:** Fase de Expansão de Conteúdo
