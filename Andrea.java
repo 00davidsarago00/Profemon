@@ -13,10 +13,12 @@ public class Andrea extends profemon {
         this.evolucao = 1;
         this.vidamaxima = 95;
         
-        imagemfrente = new ImageIcon("Sprints/" + nome + nivel + "Front" + ".png");
-        imagemcostas = new ImageIcon("Sprints/" + nome + nivel + "Back" + ".png");
-        imagemfrente = new ImageIcon(imagemfrente.getImage().getScaledInstance(550, 550, Image.SCALE_SMOOTH));
-        imagemcostas = new ImageIcon(imagemcostas.getImage().getScaledInstance(550, 550, Image.SCALE_SMOOTH));
+        imagemfrente = new ImageIcon("Sprints/" + nome + "1" + "Front" + ".png");
+        imagemcostas = new ImageIcon("Sprints/" + nome + "1" + "Back" + ".png");
+        imagemderrotado = new ImageIcon("Sprints/" + nome + "1" + "Back" + "BG.png");
+        imagemderrotado = new ImageIcon(imagemderrotado.getImage().getScaledInstance(200, 300, Image.SCALE_SMOOTH));
+        imagemfrente = new ImageIcon(imagemfrente.getImage().getScaledInstance(400, 600, Image.SCALE_SMOOTH));
+        imagemcostas = new ImageIcon(imagemcostas.getImage().getScaledInstance(400, 600, Image.SCALE_SMOOTH));
         
         this.label = new JLabel(imagemfrente); 
         
@@ -31,6 +33,10 @@ public class Andrea extends profemon {
         this.poderdosataques[2] = 20;
         this.poderdosataques[3] = 40;
 
+        this.nomedosataques[0] = "Tabelada ASCII";
+        this.nomedosataques[1] = "Estrutura de Dados";
+        this.nomedosataques[2] = "Análise de Complexidade";
+        this.nomedosataques[3] = "Busca Binaria";
     }
     
 }
