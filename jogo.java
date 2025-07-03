@@ -8,6 +8,7 @@ public class jogo implements ActionListener{
     boolean escolha = false;
     boolean confronto = false;
     boolean acabou = false;
+    boolean sair = false;
     
     
     //Profemons
@@ -50,6 +51,7 @@ public class jogo implements ActionListener{
     ImageIcon PrimeiroDeMaio = new ImageIcon("Backgrounds/PrimeiroDeMaio_BG.png");
     ImageIcon RU = new ImageIcon("Backgrounds/RU_BG.png");
 
+    JLabel fundoLabel = new JLabel(Portaria);
 
     //Batalha
     profemon prof;
@@ -60,7 +62,7 @@ public class jogo implements ActionListener{
         Principal.setSize(1200, 720);
         Principal.setLayout(new BorderLayout());
 
-        JLabel fundoLabel = new JLabel(Portaria);
+        
         fundoLabel.setBounds(0, 0, 1200, 720);
 
         startButton.setPreferredSize(new Dimension(200, 50));
@@ -152,68 +154,96 @@ public class jogo implements ActionListener{
             Principal.setTitle("Jogo de Profemons - Aguardando Escolha do Profemon");
         }
         escolha = false;
-        gamePanel.removeAll();
-        gamePanel.setLayout(new GridLayout(2,1));
+
         
+
+        gamePanel.removeAll();
         Principal.revalidate();
+
         Principal.setTitle("Jogo de Profemons - " + equipe[0].nome + " Escolhido");
         gameLabel.setText("Você escolheu " + equipe[0].nome + "! Preparem-se para a aventura!");
-        gamePanel.add(gameLabel);
-        gamePanel.add(equipe[0].label);
-        
-        esperar(5000);
+        gameLabel.setBounds(50, 335, 1000, 50); // mantém a posição centralizada
 
-        gamePanel.removeAll();
+        fundoLabel.setIcon(PrimeiroDeMaio);
+        fundoLabel.setBounds(0, 0, 1200, 720);
+        fundoLabel.add(gameLabel);
+
+        gamePanel.setLayout(null);
+        gamePanel.add(fundoLabel);
+        gamePanel.repaint();
         gamePanel.revalidate();
-
-        gamePanel.setLayout(new BorderLayout());
-        gamePanel.add(gameLabel);
-    
+        esperar(5000);
         
         gameLabel.setText("Espera, o que é isso? Um inimigo esta se aproximando!");
         esperar(5000);
         
         equipeinimigos[0] = fluflu;
         quantiadedeinimigos = 1;
-        gameLabel.setText("Prepare-se para a batalha! Use seu Profemon para enfrentar o inimigo!");
+        gameLabel.setText("Prepare-se! Use seu Profemon para enfrentar o inimigo!");
         esperar(5000);
-        
-        
-        Principal.revalidate();
-        gamePanel.removeAll();
-        gamePanel.revalidate();
 
         do{
-            confronto = batalha(equipe,equipeinimigos);
-            //while(!acabou) {};
-            gamePanel.removeAll();
-            gamePanel.add(gameLabel, BorderLayout.CENTER);
-            if(!confronto){   
+            confronto = batalha(equipe,equipeinimigos,PrimeiroDeMaio);
+            if(!confronto){  
+                fundoLabel.removeAll();
+                fundoLabel.add(gameLabel, BorderLayout.CENTER); 
                 gameLabel.setText("Espera ai, ainda nao acabou, irei curar " + equipe[0].nome +"! Tente novamente");
                 equipe[0].reviveu(equipe[0].vidamaxima);
                 esperar(5000);
-                //Quando tiver as imagens, ve se nao vale a pena colocar ele derrotado depois vivo
             }
             gamePanel.revalidate();
         }while(!confronto);
 
-        gamePanel.removeAll();
-        gamePanel.setLayout(new BorderLayout());
-        gamePanel.add(gameLabel, BorderLayout.CENTER);
+        fundoLabel.removeAll();
+        fundoLabel.setIcon(PrimeiroDeMaio);
+
+        gameLabel.setBounds(50, 335, 1000, 50);
+        fundoLabel.add(gameLabel);
+        fundoLabel.revalidate();
         gameLabel.setText("Parabens, voce venceu seu primeiro inimigo!");
         esperar(5000);
         gameLabel.setText("Agora, sua jornada se inicia de verdade.");
         esperar(5000);
         gameLabel.setText("Por favor, ajude-nos a defender a Unesp, dos universitarios.");
         esperar(5000);
-        gameLabel.setText("Aqui, voce encontrara as mais bizarras criaturas, te desejo sorte e cuidado!");
+        gameLabel.setText("Te desejo sorte e cuidado! Os inimigos são o pior da humanidade");
         esperar(5000);
 
 
-        //continuar aqui
-        acabou = false;
+        
 
+        while(!sair){
+            fundoLabel.setBounds(new GridLayout(1,3));
 
+            gameLabel.setBounds(50, 15, 1000, 50);
+            gameLabel.setText("Qual confronto voce irá primeiro?");
+            
+            JButton fase1 = new JButton("Fase 1 - Biblioteca");
+
+                fase1.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        do{
+                            confronto = batalha(equipe,equipeinimigos,Biblioteca);
+                            if(!confronto){  
+                                fundoLabel.removeAll();
+                                fundoLabel.add(gameLabel, BorderLayout.CENTER); 
+                                gameLabel.setText("Espera ai, ainda nao acabou, irei curar sua equipe! Tente novamente");
+                                for(profemon profem : equipe){
+                                    profem.reviveu(equipe[0].vidamaxima);
+                                    JOptionPane.showMessageDialog(Principal,  profem.nome + " reviveu");
+                                    esperar(1000);
+                                }
+                            }
+                            gamePanel.revalidate();
+                        }while(!confronto);
+                        
+                        
+
+                    }
+                });
+
+        }
 
 
     }
@@ -340,11 +370,13 @@ public class jogo implements ActionListener{
         }
     }
 
-    public Boolean batalha(profemon[] equipe, inimigos[] inimigue){
+    public Boolean batalha(profemon[] equipe, inimigos[] inimigue, ImageIcon fundo){
         Boolean vitoria = false;
         
         double modificardordetipoprof = 1;
         double modificadordetipoinimigo = 1;
+
+        
         
         if(quantiadedeprofemons == 1){
             prof = equipe[0];
@@ -363,29 +395,50 @@ public class jogo implements ActionListener{
 
         JLabel profLabel = new JLabel(prof.nome + " (Vida: " + prof.vida + ")");
         JLabel inimigoLabel = new JLabel(inimigo.nome + " (Vida: " + inimigo.vida + ")");
-        
+
+        profLabel.setOpaque(true);
+        profLabel.setBackground(Color.WHITE);
+
+        inimigoLabel.setOpaque(true);
+        inimigoLabel.setBackground(Color.WHITE);
+
+        JLabel fundobatalha = new JLabel(fundo);
+        fundobatalha.setBounds(0, 0, 1200, 720);
+
         Principal.add(gamePanel);
 
         while(aux > 0 && aux2 > 0){
             prof.imagemcostas = new ImageIcon(prof.imagemcostas.getImage().getScaledInstance(200, 300, Image.SCALE_SMOOTH));
             prof.label = new JLabel(prof.imagemcostas);  
             while(prof.vida > 0 && inimigo.vida > 0) {
-                gamePanel.removeAll();
-                gamePanel.setLayout(new GridLayout(2,1));
-
-                JPanel imagens = new JPanel(new GridLayout(1, 2));
-                imagens.add(prof.label);
-                imagens.add(inimigo.label);
-
-                JPanel infos = new JPanel(new GridLayout(1, 2));
-
-                profLabel.setFont(new Font("Arial", Font.BOLD, 20));
-                inimigoLabel.setFont(new Font("Arial", Font.BOLD, 20)); 
+                fundoLabel.removeAll();
+                fundoLabel.setLayout(null);
                 
+                fundobatalha.setBounds(0, 0, 1200, 720);
+                fundobatalha.setLayout(null);
+
+                prof.label.setBounds(150, 250, 250, 300);
+                inimigo.label.setBounds(800, 250, 250, 300);
+                fundobatalha.add(prof.label);
+                fundobatalha.add(inimigo.label);
+                
+                
+                JPanel infos = new JPanel(new GridLayout(1, 2, 10, 10));
+                infos.setBounds(200, 150, 800, 40);
+                infos.setOpaque(false);
+                profLabel.setFont(new Font("Arial", Font.BOLD, 22));
+                inimigoLabel.setFont(new Font("Arial", Font.BOLD, 22));
+                profLabel.setHorizontalAlignment(SwingConstants.CENTER);
+                inimigoLabel.setHorizontalAlignment(SwingConstants.CENTER);
                 infos.add(profLabel);
                 infos.add(inimigoLabel);
+                fundobatalha.add(infos);
 
                 JPanel acoesPanel = new JPanel(new GridLayout(2, 2));
+                acoesPanel.setBounds(350, 580, 500, 100);
+                acoesPanel.setOpaque(true);
+                acoesPanel.setBackground(new Color(255, 255, 255, 180));
+                acoesPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2));
                 JButton ataque1Button = new JButton(prof.nomedosataques[0]);
                 JButton ataque2Button = new JButton(prof.nomedosataques[1]);
                 JButton ataque3Button = new JButton(prof.nomedosataques[2]);
@@ -423,35 +476,28 @@ public class jogo implements ActionListener{
                     }
                 });
 
+                
                 acoesPanel.add(ataque1Button);
                 acoesPanel.add(ataque2Button);
                 acoesPanel.add(ataque3Button);
                 acoesPanel.add(ataque4Button);
 
-                JPanel inferior = new JPanel(new BorderLayout());
-                inferior.add(infos, BorderLayout.NORTH);
-                inferior.add(acoesPanel, BorderLayout.CENTER);
-                
-                gamePanel.add(imagens);
-                gamePanel.add(inferior);
+                fundobatalha.add(acoesPanel);
 
+                fundoLabel.add(fundobatalha);
+
+                gamePanel.removeAll();
+                gamePanel.setLayout(null);
+                gamePanel.add(fundoLabel);
                 gamePanel.revalidate();
-                gamePanel.repaint(); 
-                
-                gamePanel.setVisible(true);
-                
-                Principal.setVisible(true);
-                Principal.revalidate();
-                Principal.repaint();
+                gamePanel.repaint();
 
-                //System.out.println("Chegou aqui");
 
                 while(indice < 0 || indice > 3) {
                     Principal.setTitle("Jogo de Profemons - Aguardando Escolha do Ataque");
 
                 }
-                Principal.setTitle("Atacando");
-                esperar(2000);
+                Principal.setTitle("Atacando - Animacao");
                 modificardordetipoprof = 1;
                 modificadordetipoinimigo = 1;
 
@@ -483,33 +529,43 @@ public class jogo implements ActionListener{
 
                 
                 int indiceinimigo = (int) (Math.random() * 4);
-
-                double danoprof = (double)(prof.ataque*prof.poderdosataques[indice] / (inimigo.defesa))*modificardordetipoprof;
-                double danoini =  (double)(inimigo.ataque*inimigo.poderdosataques[indiceinimigo] / (prof.defesa))*modificadordetipoinimigo;
+                
+                double danoini = ((3.0 * inimigo.ataque * inimigo.poderdosataques[indiceinimigo]) / (prof.defesa + 50.0)) * modificadordetipoinimigo;
+                double danoprof = ((3.0 * prof.ataque * prof.poderdosataques[indice]) / (inimigo.defesa + 50.0)) * modificardordetipoprof;               
 
                 if(prof.velocidadedosataques[indice] > inimigo.velocidadedosataques[indiceinimigo]) {
+
+                    animacaodeataque(prof.nomedosataques[indice], prof.poderdosataques[indice], true, fundobatalha);
                     inimigo.receberDano((int)Math.floor(danoprof), prof);
+                    inimigoLabel.setText(inimigo.nome + " (Vida: " + inimigo.vida + ")");
                     if(inimigo.vida > 0) {
+                        animacaodeataque(inimigo.nomedosataques[indice], inimigo.poderdosataques[indiceinimigo], false, fundobatalha);
                         prof.receberDano((int)Math.ceil(danoini), inimigo);
+                        profLabel.setText(prof.nome + " (Vida: " + prof.vida + ")");
                     }
                 } 
                 else {
+                    animacaodeataque(inimigo.nomedosataques[indice], inimigo.poderdosataques[indiceinimigo], false, fundobatalha);
                     prof.receberDano((int)Math.ceil(danoini), inimigo);
+                    profLabel.setText(prof.nome + " (Vida: " + prof.vida + ")");
                     if(prof.vida > 0) {
+                        animacaodeataque(prof.nomedosataques[indice], prof.poderdosataques[indice],true, fundobatalha);
                         inimigo.receberDano((int)Math.floor(danoprof), prof);
+                        inimigoLabel.setText(inimigo.nome + " (Vida: " + inimigo.vida + ")");
                     }
                     
                 }
                 indice = -1;
-                profLabel.setText(prof.nome + " (Vida: " + prof.vida + ")");
-                inimigoLabel.setText(inimigo.nome + " (Vida: " + inimigo.vida + ")");
+                
+                
             }
             
            
-            gamePanel.revalidate();
-            gamePanel.repaint();
+            fundoLabel.revalidate();
+            fundoLabel.repaint();
             
             if(prof.vida <= 0) {
+                gamePanel.revalidate();
                 Principal.revalidate();
                 prof.label.setVisible(false);
                 aux--;
@@ -521,6 +577,7 @@ public class jogo implements ActionListener{
                     }
                 }
             } else if(inimigo.vida <= 0) {
+                gamePanel.revalidate();
                 Principal.revalidate();
                 esperar(5000);
                 inimigo.label.setVisible(false);
@@ -538,12 +595,20 @@ public class jogo implements ActionListener{
         Principal.setTitle("Jogo de Profemons - Batalha Finalizada");
         
         
-
+        fundoLabel.removeAll();
+        fundoLabel.setIcon(fundo);
+        
         JLabel mensagemfinal = new JLabel("Batalha Finalizada!");
-        gamePanel.removeAll();
-        gamePanel.setLayout(new BorderLayout());
-        gamePanel.add(mensagemfinal);
         mensagemfinal.setFont(new Font("Arial", Font.BOLD, 30));
+        mensagemfinal.setOpaque(true);
+        mensagemfinal.setBackground(Color.WHITE);
+        mensagemfinal.setBounds(40, 335, 1000, 50);
+        
+        fundoLabel.add(mensagemfinal);
+        fundoLabel.revalidate();
+        fundoLabel.repaint();
+        mensagemfinal.setFont(new Font("Arial", Font.BOLD, 30));
+        
         esperar(5000);
 
         if(vitoria) mensagemfinal.setText("Você venceu a batalha!");  
@@ -553,6 +618,63 @@ public class jogo implements ActionListener{
         acabou = true;
         return vitoria;
     }
+
+    void animacaodeataque(String nomedoatatque, int dano, Boolean ehProfemon, JLabel fundobatalha){
+
+        int posin;
+        int posfim;
+        ImageIcon ataque;
+        String tipodoataque;
+
+        if(ehProfemon){
+            posin = 150;
+            posfim = 800;
+        }  
+        else{ 
+            posin = 800;
+            posfim = 150;
+        }
+
+        if(dano <= 0){
+            tipodoataque = "Buff";
+            posfim = posin;
+        }
+        else if(dano<=69) tipodoataque = "Light";
+        else if(dano<=100) tipodoataque = "Mid";
+        else tipodoataque = "Ult";
+
+        ataque = new ImageIcon("Sprints/Attack"+ tipodoataque + ".gif");
+
+        JLabel imagemataque = new JLabel(ataque);
+        fundobatalha.add(imagemataque);
+        fundobatalha.revalidate();
+
+        if(posin == posfim){
+            imagemataque.setBounds(posin, 250, 250, 300);
+            esperar(2000);
+            fundobatalha.revalidate();
+            fundobatalha.remove(imagemataque);
+        }
+        else{
+            if(ehProfemon){
+                for(int i = posin; i < posfim; i++){
+                    imagemataque.setBounds(i, 250, 250, 300);
+                    esperar(2);
+                    fundobatalha.revalidate();
+                }
+            }
+            else{
+                for(int i = posin; i > posfim; i--){
+                    imagemataque.setBounds(i, 250, 250, 300);
+                    esperar(2);
+                    fundobatalha.revalidate();
+                }
+            }
+            fundobatalha.remove(imagemataque);
+        }
+
+    }
+
 
     void esperar(int tempo) {
         try {
