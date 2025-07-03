@@ -197,6 +197,141 @@ O projeto utiliza extensivamente threading para:
 - **Sincronização:** Métodos `synchronized` para evitar race conditions
 - **Interrupção Segura:** Tratamento adequado de `InterruptedException`
 
+## 🎮 Tipos de Profemon
+
+O jogo agora conta com **três tipos distintos** de Profemon, cada um com características únicas:
+
+### 👨‍💻 Tipo Programador
+- **Representantes:** Paiola, Andrea, Douglas
+- **Características:** Equilibrio entre ataque e velocidade
+- **Estratégia:** Versáteis em combate, bons para iniciantes
+
+### 🧮 Tipo Matemático  
+- **Representantes:** LH, Emilia
+- **Características:** Alta defesa e vida, foco em resistência
+- **Estratégia:** Tanques ideais para absorver dano
+
+### 👨‍🔧 Tipo Engenheiro
+- **Representantes:** Matheus
+- **Características:** Atributos balanceados, versatilidade tática
+- **Estratégia:** Adaptável a diferentes situações de combate
+
+## 🏆 Sistema de Fases
+
+O jogo implementa um sistema progressivo de fases:
+- **Fase 1-4:** Enfrentamento contra diferentes tipos de inimigos
+- **Sistema de Equipes:** Suporte para até 6 Profemons e 6 inimigos simultâneos
+- **Progressão:** Desbloqueio gradual de conteúdo
+
+## 🏗️ Arquitetura Técnica Avançada
+
+### 📊 Hierarquia de Classes UML
+```mermaid
+classDiagram
+    class personagens {
+        <<abstract>>
+        +String nome, tipo
+        +int vida, ataque, defesa
+        +int[] velocidadedosataques
+        +ImageIcon imagemFrente
+        +receberDano()
+        +derrotado() abstract
+    }
+    
+    class profemon {
+        <<abstract>>
+        +int nivel, experiencia, evolucao
+        +synchronized receberDano()
+        +mostrarCaracteristicas()
+        +evoluirdenivel()
+    }
+    
+    class inimigos {
+        <<abstract>>
+        +synchronized receberDano()
+        +derrotado()
+    }
+    
+    personagens <|-- profemon
+    personagens <|-- inimigos
+    profemon <|-- Paiola
+    profemon <|-- Andrea
+    profemon <|-- LH
+    profemon <|-- Douglas
+    profemon <|-- Emilia
+    profemon <|-- Matheus
+    inimigos <|-- inimigoPetista
+```
+
+### 🧵 Sistema de Threading e Concorrência
+
+**Principais Características:**
+- **Métodos Synchronized:** Controle de acesso concorrente em `receberDano()`
+- **Thread Separation:** UI não trava durante animações e batalhas
+- **Lambda Expressions:** Execução assíncrona de fases usando `new Thread(() -> {...}).start()`
+- **Event Dispatch Thread:** Gerenciamento seguro de eventos Swing
+
+**Exemplo de Implementação:**
+```java
+// Thread safety em combate
+public synchronized void receberDano(int dano, inimigos Autor) {
+    this.vida -= dano/this.defesa;
+    if (this.vida <= 0) {
+        derrotado();
+    }
+}
+
+// Execução assíncrona de fases
+new Thread(() -> {
+    confronto = batalha(equipe, equipeinimigos, Biblioteca);
+    if(confronto) venceuafase1 = true;
+}).start();
+```
+
+### 🎯 Padrões de Design Implementados
+
+| Padrão | Implementação | Benefício |
+|--------|---------------|-----------|
+| **Template Method** | Classes abstratas `personagens` | Evita duplicação de código |
+| **Strategy Pattern** | Diferentes ataques por Profemon | Flexibilidade de comportamento |
+| **Observer Pattern** | Sistema `ActionListener` | Desacoplamento UI/Lógica |
+| **Factory (Implícito)** | Criação de personagens | Polimorfismo e extensibilidade |
+
+### ⚡ Stack Tecnológica
+
+```mermaid
+graph TB
+    A[Java 8+] --> B[Swing Framework]
+    A --> C[AWT Event System]
+    A --> D[Java Threading]
+    
+    B --> E[JFrame Windows]
+    B --> F[JPanel Containers]
+    B --> G[JButton Controls]
+    B --> H[JLabel Sprites]
+    
+    C --> I[ActionListener]
+    C --> J[Event Queue]
+    
+    D --> K[synchronized Methods]
+    D --> L[Thread Management]
+    
+    H --> M[ImageIcon System]
+    M --> N[PNG GIF Assets]
+    
+    style A fill:#e3f2fd
+    style B fill:#f3e5f5
+    style D fill:#e8f5e8
+```
+
+### 🔧 Especificações de Performance
+
+- **Threading Model:** Event Dispatch Thread + Background Worker Threads
+- **Memory Management:** Sprite caching para otimização
+- **Synchronization:** Apenas em métodos críticos de combate
+- **UI Responsiveness:** Animações não-bloqueantes com `Thread.sleep()`
+
+---
 ## 📊 Estado Atual do Projeto
 
 ### ✅ Funcionalidades Completas
