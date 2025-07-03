@@ -13,7 +13,7 @@ O jogo possui uma narrativa onde o jogador é um "jovem universitário" que deve
 - **`personagens.java`** - Classe abstrata base para todos os personagens
 - **`profemon.java`** - Classe abstrata para personagens jogáveis com sistema de evolução
 - **`inimigos.java`** - Classe abstrata para personagens inimigos com IA de movimento
-- **`inimigoPetista.java`** - Implementação concreta de um inimigo
+- **`inimigoPadrão.java`** - Implementação concreta de um inimigo
 - **`Paiola.java`** - Profemon baseado no professor Paiola (tipo Programador)
 - **`Andrea.java`** - Profemon baseado na professora Andrea (tipo Programador)  
 - **`LH.java`** - Profemon baseado no professor LH (tipo Matemático)
@@ -44,7 +44,7 @@ personagens (abstract)
 │   ├── Emilia (concrete) - Tipo: Matemático
 │   └── Matheus (concrete) - Tipo: Engenheiro
 └── inimigos (abstract)
-    └── inimigoPetista (concrete)
+    └── inimigoPadrão (concrete)
 ```
 
 ### 🏗️ Classe Base: `personagens`
@@ -143,16 +143,16 @@ Estende `personagens` e representa os adversários:
 - **Velocidades de Ataque:** [75, 55, 60, 30]
 - **Características:** Estatísticas balanceadas, versatilidade
 
-### 🏴‍☠️ Implementação Concreta: `inimigoPetista`
+### 🏴‍☠️ Implementação Concreta: `inimigoPadrão`
 
 Primeira implementação concreta de um inimigo com:
-- **Nome:** Petista
+- **Nome:** Padrão
 - **Tipo:** EntraçonoRU
 - **Vida:** 13
 - **Ataque:** 13  
 - **Defesa:** 13
 - **Velocidade:** 13
-- **Sprite:** "petista.png"
+- **Sprite:** "Padrão.png"
 - **Velocidades de Ataque:** [10, 15, 20, 25]
 
 ## ⚡ Funcionalidades Implementadas
@@ -260,7 +260,7 @@ classDiagram
     profemon <|-- Douglas
     profemon <|-- Emilia
     profemon <|-- Matheus
-    inimigos <|-- inimigoPetista
+    inimigos <|-- inimigoPadrão
 ```
 
 ### 🧵 Sistema de Threading e Concorrência
@@ -429,7 +429,7 @@ Profemon/
 ├── 📄 personagens.java       # Classe abstrata base
 ├── 📄 profemon.java         # Classe abstrata para jogadores
 ├── 📄 inimigos.java         # Classe abstrata para adversários
-├── 📄 inimigoPetista.java   # Inimigo concreto implementado
+├── 📄 inimigoPadrão.java   # Inimigo concreto implementado
 ├── 📄 Paiola.java           # Profemon do Professor Paiola
 ├── 📄 Andrea.java           # Profemon da Professora Andrea
 ├── 📄 LH.java               # Profemon do Professor LH
