@@ -545,8 +545,8 @@ public class jogo implements ActionListener{
 
                 int indiceinimigo = (int) (Math.random() * 4);
                 
-                double danoini = ((3.0 * inimigo.ataque * inimigo.poderdosataques[indiceinimigo]) / (prof.defesa + 50.0)) * modificadordetipoinimigo;
-                double danoprof = ((3.0 * prof.ataque * prof.poderdosataques[indice]) / (inimigo.defesa + 50.0)) * modificardordetipoprof;               
+                double danoini = ((3.0 * inimigo.ataque + inimigo.poderdosataques[indiceinimigo]) / (prof.defesa + 50.0)) * modificadordetipoinimigo;
+                double danoprof = ((3.0 * prof.ataque + prof.poderdosataques[indice]) / (inimigo.defesa + 50.0)) * modificardordetipoprof;               
 
                 if(prof.velocidadedosataques[indice] > inimigo.velocidadedosataques[indiceinimigo]) {
 
