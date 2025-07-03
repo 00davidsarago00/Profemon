@@ -13,10 +13,12 @@ public class Matheus extends profemon {
         this.evolucao = 1;
         this.vidamaxima = 110;
         
-        imagemfrente = new ImageIcon("Sprints/" + nome + nivel + "Front" + ".png");
-        imagemcostas = new ImageIcon("Sprints/" + nome + nivel + "Back" + ".png");
-        imagemfrente = new ImageIcon(imagemfrente.getImage().getScaledInstance(550, 550, Image.SCALE_SMOOTH));
-        imagemcostas = new ImageIcon(imagemcostas.getImage().getScaledInstance(550, 550, Image.SCALE_SMOOTH));
+        imagemfrente = new ImageIcon("Sprints/" + nome + "1" + "Front" + ".png");
+        imagemcostas = new ImageIcon("Sprints/" + nome + "1" + "Back" + ".png");
+        imagemderrotado = new ImageIcon("Sprints/" + nome + "1" + "Back" + "BG.png");
+        imagemderrotado = new ImageIcon(imagemderrotado.getImage().getScaledInstance(200, 300, Image.SCALE_SMOOTH));
+        imagemfrente = new ImageIcon(imagemfrente.getImage().getScaledInstance(400, 600, Image.SCALE_SMOOTH));
+        imagemcostas = new ImageIcon(imagemcostas.getImage().getScaledInstance(400, 600, Image.SCALE_SMOOTH));
         
         this.label = new JLabel(imagemfrente); 
         
@@ -30,6 +32,11 @@ public class Matheus extends profemon {
         this.poderdosataques[1] = 0;
         this.poderdosataques[2] = 60;
         this.poderdosataques[3] = 0;
+        
+        this.nomedosataques[0] = "SCRUM";
+        this.nomedosataques[1] = "Planejamento Estratégico";
+        this.nomedosataques[2] = "Curva ABC";
+        this.nomedosataques[3] = "Gestão de Recursos";
     }
     
 }
