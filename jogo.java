@@ -16,7 +16,7 @@ public class jogo implements ActionListener{
     boolean venceuafase3 = false;
     boolean venceuafase4 = false;
    
-
+    final Object lock = new Object();
     
     
     //Profemons
@@ -150,277 +150,150 @@ public class jogo implements ActionListener{
         esperar(5000);
     
 
+        gameLabel.setText("Qual confronto você irá primeiro?");
         gameLabel.setBounds(50, 15, 1000, 50);
-        gameLabel.setText("Qual confronto voce irá primeiro?");
-            
-        JPanel paineldefases = new JPanel(new GridLayout(5,3));
-        paineldefases.setBounds(400, 100, 400, 500);
+
+        fundoLabel.add(gameLabel);
+        fundoLabel.repaint();
+        fundoLabel.revalidate();
+        JPanel painelDeFases = new JPanel(new GridLayout(5, 1, 5, 5));
+        painelDeFases.setBounds(400, 150, 400, 300);
 
         JButton fase1 = new JButton("Fase 1 - Biblioteca");
         JButton fase2 = new JButton("Fase 2 - LABSIC");
         JButton fase3 = new JButton("Fase 3 - RU");
-        JButton fase4 = new JButton("Fase 4 - Boss 1");
-        JButton fase5 = new JButton("Fase 5 - Boss 2");
+        JButton fase4 = new JButton("Fase 4 - Boss");
+        JButton fecharJogo = new JButton("Fechar Jogo");
 
-        fase1.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new Thread(() -> {
-                do{
-                    limpaequipe(equipeinimigos);       
-                    equipeinimigos[0] = new Fluflu();
-                    equipeinimigos[1] = new Cherries();
-                    confronto = batalha(equipe,equipeinimigos,Biblioteca);
-                    
-                    if(!confronto){  
-                        fundoLabel.removeAll();
-                        fundoLabel.add(gameLabel, BorderLayout.CENTER); 
-                        gameLabel.setText("Espera ai, ainda nao acabou, irei curar sua equipe! Tente novamente");
-                        fundoLabel.revalidate();
-                        gamePanel.revalidate();
-                        esperar(5000);
-                        reviveEquipe(equipe);
-                        }   
-                    gamePanel.revalidate();
-                }while(!confronto);
-                confronto = false;
-                fundoLabel.revalidate();
-                gamePanel.revalidate();
-                gameLabel.setText("Muito bem, você passou pela fase 1!");
-                fundoLabel.revalidate();
-                gamePanel.revalidate();
-                esperar(5000);
-                if(quantiadedeprofemons < 6){
-                gameLabel.setText("Como recompensa, escolha um novo profemon");
-                fundoLabel.revalidate();
-                gamePanel.revalidate();
-                esperar(5000);
-                telaescolherprofemon(emilia,rejeitados[quantidaderejeitados-1],rejeitados[quantidaderejeitados-2]);
-                }
-                gameLabel.setText("Escolha seu proximo desafio");
-                fundoLabel.revalidate();
-                gamePanel.revalidate();
-                esperar(5000);
-                venceuafase1 = true;
-                }).start();
+        fase1.addActionListener(e -> iniciarFase(1));
+        fase2.addActionListener(e -> iniciarFase(2));
+        fase3.addActionListener(e -> iniciarFase(3));
+        fase4.addActionListener(e -> iniciarFase(4));
+
+        fecharJogo.addActionListener(e -> {
+            sair = true;
+            synchronized (lock) {
+                lock.notify();
             }
         });
-        fase2.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new Thread(() -> {
-                do{
-                    limpaequipe(equipeinimigos);
-                    equipeinimigos[0] = new Cherries();
-                    equipeinimigos[1] = new Fluflu();
-                    equipeinimigos[2] = new Cherries();
+        fase2.setEnabled(venceuafase1);
+        fase3.setEnabled(venceuafase2);
+        fase4.setEnabled(venceuafase3);
 
-                    confronto = batalha(equipe,equipeinimigos,LEPEC);
-                    if(!confronto){  
-                        fundoLabel.removeAll();
-                        fundoLabel.add(gameLabel, BorderLayout.CENTER); 
-                        gameLabel.setText("Espera ai, ainda nao acabou, irei curar sua equipe! Tente novamente");
-                        fundoLabel.revalidate();
-                        gamePanel.revalidate();
-                        esperar(5000);
-                        reviveEquipe(equipe);
-                        }
-                    gamePanel.revalidate();
-                }while(!confronto);
-                confronto = false;
-                gameLabel.setText("Muito bem, você passou pela fase 2!");
-                fundoLabel.revalidate();
-                gamePanel.revalidate();
-                esperar(5000);
-                if(quantiadedeprofemons < 6){
-                gameLabel.setText("Como recompensa, escolha um novo profemon");
-                fundoLabel.revalidate();
-                gamePanel.revalidate();
-                esperar(5000);
-                telaescolherprofemon(paiola,rejeitados[quantidaderejeitados-1],rejeitados[quantidaderejeitados-2]);
-                }
-                gameLabel.setText("Escolha seu proximo desafio");
-                fundoLabel.revalidate();
-                gamePanel.revalidate();
-                esperar(5000);
-                venceuafase2 = true;
-                }).start();
-            }
-        });
-        fase3.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new Thread(() -> {
-                do{
-                    limpaequipe(equipeinimigos);
-                    equipeinimigos[0] = new Fluflu();
-                    equipeinimigos[1] = new CaisTharla();
-                    equipeinimigos[2] = new Cherries();
-                    equipeinimigos[2] = new CaisTharla();
+        painelDeFases.add(fase1);
+        painelDeFases.add(fase2);
+        painelDeFases.add(fase3);
+        painelDeFases.add(fase4);
+        painelDeFases.add(fecharJogo);
 
-                    confronto = batalha(equipe,equipeinimigos,RU);
-                    if(!confronto){  
-                        fundoLabel.removeAll();
-                        fundoLabel.add(gameLabel, BorderLayout.CENTER); 
-                        gameLabel.setText("Espera ai, ainda nao acabou, irei curar sua equipe! Tente novamente");
-                        fundoLabel.revalidate();
-                        gamePanel.revalidate();
-                        esperar(5000);
-                        reviveEquipe(equipe);
-                        }
-                    gamePanel.revalidate();
-                }while(!confronto);
-                confronto = false;
-                gameLabel.setText("Muito bem, você passou pela fase 3!");
-                fundoLabel.revalidate();
-                gamePanel.revalidate();
-                esperar(5000);
-                if(quantiadedeprofemons < 6){
-                gameLabel.setText("Como recompensa, escolha um novo profemon");
-                fundoLabel.revalidate();
-                gamePanel.revalidate();
-                esperar(5000);
-                telaescolherprofemon(douglas,rejeitados[quantidaderejeitados-1],rejeitados[quantidaderejeitados-2]);
+        fundoLabel.add(painelDeFases);
+        gamePanel.add(fundoLabel);
+        Principal.add(gamePanel);
+        Principal.setVisible(true);
+
+        while (!sair) {
+            synchronized (lock) {
+                try {
+                    lock.wait();
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
                 }
-                gameLabel.setText("Escolha seu proximo desafio");
-                fundoLabel.revalidate();
-                gamePanel.revalidate();
-                esperar(5000);
-                venceuafase3 = true;
-                }).start();
             }
+
             
-        });
-        
-        fase4.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new Thread(() -> {
-                do{
-                    limpaequipe(equipeinimigos);
-                    equipeinimigos[0] = new Boss1();
 
-                    confronto = batalha(equipe,equipeinimigos,PrimeiroDeMaio);
-                    if(!confronto){  
-                        fundoLabel.removeAll();
-                        fundoLabel.add(gameLabel, BorderLayout.CENTER); 
-                        gameLabel.setText("Espera ai, ainda nao acabou, irei curar sua equipe! Tente novamente");
-                        fundoLabel.revalidate();
-                        gamePanel.revalidate();
-                        esperar(5000);
-                        reviveEquipe(equipe);
-                        }
-                    gamePanel.revalidate();
-                }while(!confronto);
-                confronto = false;
-                gameLabel.setText("Muito bem, você passou pela fase 4!");
+            SwingUtilities.invokeLater(() -> {
+                fase2.setEnabled(venceuafase1);
+                fase3.setEnabled(venceuafase2);
+                fase4.setEnabled(venceuafase3);
+                fundoLabel.removeAll();
+                fundoLabel.setIcon(PrimeiroDeMaio);
+                gameLabel.setText("Escolha seu próximo desafio:");
+                gameLabel.setBounds(50, 15, 1000, 50);
+                fundoLabel.add(gameLabel);
+                fundoLabel.add(painelDeFases);  // painelDeFases precisa ser final
                 fundoLabel.revalidate();
-                gamePanel.revalidate();
-                esperar(5000);
-                if(quantiadedeprofemons < 6){
-                gameLabel.setText("Como recompensa, escolha um novo profemon");
-                fundoLabel.revalidate();
-                gamePanel.revalidate();
-                esperar(5000);
-                telaescolherprofemon(paiola,rejeitados[quantidaderejeitados-1],rejeitados[quantidaderejeitados-2]);
-                }
-                gameLabel.setText("Escolha seu proximo desafio");
-                fundoLabel.revalidate();
-                gamePanel.revalidate();
-                esperar(5000);
-                venceuafase4 = true;
-                }).start();
-            }
-        });
-        fase5.addActionListener(new ActionListener() {
-            
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new Thread(() -> {
-                do{
-                    limpaequipe(equipeinimigos);
-                    equipeinimigos[0] = new Boss1();
-                    equipeinimigos[1] = new Boss2();
+                fundoLabel.repaint();
+            });
+        }
 
-                    confronto = batalha(equipe,equipeinimigos,Portaria);
-                    if(!confronto){  
-                        fundoLabel.removeAll();
-                        fundoLabel.add(gameLabel, BorderLayout.CENTER); 
-                        gameLabel.setText("Espera ai, ainda nao acabou, irei curar sua equipe! Tente novamente");
-                        fundoLabel.revalidate();
-                        gamePanel.revalidate();
-                        esperar(5000);
-                        reviveEquipe(equipe);
-                        }
-                    gamePanel.revalidate();
-                }while(!confronto);
-                confronto = false;
-                gameLabel.setText("Muito bem, você passou pela fase 5!");
-                fundoLabel.revalidate();
-                gamePanel.revalidate();
-                esperar(5000);
-                if(quantiadedeprofemons < 6){
-                gameLabel.setText("Como recompensa, escolha um novo profemon");
-                fundoLabel.revalidate();
-                gamePanel.revalidate();
-                esperar(5000);
-                telaescolherprofemon(paiola,rejeitados[quantidaderejeitados-1],rejeitados[quantidaderejeitados-2]);
-                }
-                gameLabel.setText("Escolha seu proximo desafio");
-                fundoLabel.revalidate();
-                gamePanel.revalidate();
-                esperar(5000);
-                }).start();
-            }
-        });
-
-        paineldefases.add(fase1);
-        paineldefases.add(fase2);
-        paineldefases.add(fase3);
-        paineldefases.add(fase4);
-        paineldefases.add(fase5);
-        
-        fundoLabel.add(paineldefases);
-        
-        fundoLabel.revalidate();
-        gamePanel.revalidate();
-
-        JButton fecharjogo = new JButton("Fechar jogo!");
-        fecharjogo.setFont(new Font("Arial", Font.BOLD, 20));
-        fecharjogo.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                sair = true;
-            }
-                
-        });
-
-        fecharjogo.setBounds(500, 500, 200, 50);
-
-        while(!sair){
-            esperar(100);
-            Principal.setTitle("Jogo de Profemons - Aguardando Selecionar a fase");
-            if(!venceuafase1) fase2.setEnabled(false);
-            else fase2.setEnabled(true);
-            
-            if(!venceuafase2) fase3.setEnabled(false);
-            else fase3.setEnabled(true);
-            
-            if(!venceuafase3) fase4.setEnabled(false);
-            else fase4.setEnabled(true);
-
-            if(!venceuafase4) fase5.setEnabled(false);
-            else fase5.setEnabled(true);
-            fundoLabel.revalidate();
-            gamePanel.revalidate();
-            fundoLabel.repaint();
-            gamePanel.repaint();
-
-            }
         System.exit(0);
     }
     
     public static void main(String[] args) {
        new jogo();
+    }
+    void iniciarFase(int fase) {
+        new Thread(() -> {
+            do {
+                limpaequipe(equipeinimigos);
+                switch (fase) {
+                    case 1 -> {
+                        equipeinimigos[0] = new Fluflu();
+                        equipeinimigos[1] = new Cherries();
+                        confronto = batalha(equipe, equipeinimigos, Biblioteca);
+                    }
+                    case 2 -> {
+                        equipeinimigos[0] = new Cherries();
+                        equipeinimigos[1] = new Fluflu();
+                        equipeinimigos[2] = new Cherries();
+                        confronto = batalha(equipe, equipeinimigos, LEPEC);
+                    }
+                    case 3 -> {
+                        equipeinimigos[0] = new Fluflu();
+                        equipeinimigos[1] = new CaisTharla();
+                        equipeinimigos[2] = new Cherries();
+                        equipeinimigos[3] = new CaisTharla();
+                        confronto = batalha(equipe, equipeinimigos, RU);
+                    }
+                    case 4 -> {
+                        equipeinimigos[0] = new Boss1();
+                        equipeinimigos[1] = new Boss2();
+                        confronto = batalha(equipe, equipeinimigos, Portaria);
+                    }
+                }
+
+                if (!confronto) {
+                    SwingUtilities.invokeLater(() -> {
+                        fundoLabel.removeAll();
+                        fundoLabel.setIcon(PrimeiroDeMaio);
+                        gameLabel.setText("Espera ai, ainda não acabou! Irei curar sua equipe. Tente novamente.");
+                        gameLabel.setBounds(50, 335, 1000, 50);
+                        fundoLabel.add(gameLabel);
+                        fundoLabel.revalidate();
+                        fundoLabel.repaint();
+                        gamePanel.revalidate();
+                    });
+                    esperar(3000);
+                    reviveEquipe(equipe);
+                }
+
+            } while (!confronto);
+            confronto = false;
+
+            switch (fase) {
+                case 1 -> venceuafase1 = true;
+                case 2 -> venceuafase2 = true;
+                case 3 -> venceuafase3 = true;
+                case 4 -> venceuafase4 = true;
+            }
+
+            SwingUtilities.invokeLater(() -> {
+                fundoLabel.removeAll();
+                fundoLabel.setIcon(PrimeiroDeMaio);
+                gameLabel.setText("Você passou pela fase " + fase + "!");
+                gameLabel.setBounds(50, 335, 1000, 50);
+                fundoLabel.add(gameLabel);
+                fundoLabel.revalidate();
+                fundoLabel.repaint();
+                gamePanel.revalidate();
+            });
+            esperar(2000);
+
+            synchronized (lock) {
+                lock.notify();
+            }
+        }).start();
     }
 
     public profemon escolherProfemon(profemon[] equipe) {
@@ -925,13 +798,13 @@ public class jogo implements ActionListener{
         gamePanel.remove(escolhaButton);
         gamePanel.revalidate();
 
-        for(profemon profezinho : rejeitados){
+        for(profemon profezinho : equipe){
             if(profezinho == prof1) prof1botao.setEnabled(false);
         }
-        for(profemon profezinho : rejeitados){
+        for(profemon profezinho : equipe){
             if(profezinho == prof2) prof2botao.setEnabled(false);
         }
-        for(profemon profezinho : rejeitados){
+        for(profemon profezinho : equipe){
             if(profezinho == prof3) prof3botao.setEnabled(false);
         }
 
@@ -973,8 +846,8 @@ public class jogo implements ActionListener{
 
         gamePanel.add(fundoLabel);
 
-        Principal.setTitle("Jogo de Profemons - " + equipe[0].nome + " Escolhido");
-        gameLabel.setText("Você escolheu " + equipe[0].nome + "! Preparem-se para a aventura!");
+        Principal.setTitle("Jogo de Profemons - " + equipe[quantiadedeprofemons-1].nome + " Escolhido");
+        gameLabel.setText("Você escolheu " + equipe[quantiadedeprofemons-1].nome + "! Preparem-se para a aventura!");
         gameLabel.setBounds(50, 335, 1000, 50); // mantém a posição centralizada
 
         fundoLabel.setIcon(PrimeiroDeMaio);
